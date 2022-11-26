@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    html,
+    body {
+        /*background-color: #262626;*/
+        margin: 0;
+        padding: 0;
+    }
+
+    .background {
+        /*position: absolute;*/
+        display: block;
+        top: 0;
+        left: 0;
+        z-index: 0;
+    }
+</style>
+
+<div class="middle-div text-center">
+    <h1 class="display-4 text-black">Welcome</h1>
+</div>
+
+
+<canvas class="background"></canvas>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.3/particles.min.js"></script>
+    <script type="text/javascript">
+        window.onload = function() {
+            Particles.init({
+                selector: '.background',
+                connectParticles: true,
+                color: ["#880808"],
+                speed: 0.4,
+
+            });
+        };
+    </script>
+}

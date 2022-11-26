@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>C:\Users\Philskillz\Desktop\TheSKZWeb</_PublishTargetUrl>
+    <History>True|2022-08-03T16:15:11.1640819Z;True|2022-08-03T18:03:29.2055564+02:00;True|2022-08-03T16:24:56.4761144+02:00;True|2022-07-21T17:28:13.5526599+02:00;True|2022-07-21T17:03:27.4771195+02:00;</History>
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="pg-main">
+      <Value>Server=theskz.dev%3bDatabase=theskz_web_db%3bPort=5432%3bUser Id=theskz_web%3bPassword=PEf1QXHRd13qNhCJv2NSifI3nhJe5iKSntVcPDkoHgtZ7L5R4QlPnK6QxQIkOyjr%3b</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>

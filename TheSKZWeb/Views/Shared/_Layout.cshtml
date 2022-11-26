@@ -1,0 +1,318 @@
+﻿@using System.Security.Claims
+<!DOCTYPE html>
+<html lang="en">
+<!--
+        tttt          hhhhhhh                                                  kkkkkkkk                                                d::::::d                                             
+      ttt:::t          h:::::h                                                  k::::::k                                                d::::::d                                             
+      t:::::t          h:::::h                                                  k::::::k                                                d::::::d                                             
+      t:::::t          h:::::h                                                  k::::::k                                                d:::::d                                              
+ttttttt:::::ttttttt     h::::h hhhhh           eeeeeeeeeeee        ssssssssss    k:::::k    kkkkkkkzzzzzzzzzzzzzzzzz            ddddddddd:::::d     eeeeeeeeeeee    vvvvvvv           vvvvvvv
+t:::::::::::::::::t     h::::hh:::::hhh      ee::::::::::::ee    ss::::::::::s   k:::::k   k:::::k z:::::::::::::::z          dd::::::::::::::d   ee::::::::::::ee   v:::::v         v:::::v 
+t:::::::::::::::::t     h::::::::::::::hh   e::::::eeeee:::::eess:::::::::::::s  k:::::k  k:::::k  z::::::::::::::z          d::::::::::::::::d  e::::::eeeee:::::ee  v:::::v       v:::::v  
+tttttt:::::::tttttt     h:::::::hhh::::::h e::::::e     e:::::es::::::ssss:::::s k:::::k k:::::k   zzzzzzzz::::::z          d:::::::ddddd:::::d e::::::e     e:::::e   v:::::v     v:::::v   
+      t:::::t           h::::::h   h::::::he:::::::eeeee::::::e s:::::s  ssssss  k::::::k:::::k          z::::::z           d::::::d    d:::::d e:::::::eeeee::::::e    v:::::v   v:::::v    
+      t:::::t           h:::::h     h:::::he:::::::::::::::::e    s::::::s       k:::::::::::k          z::::::z            d:::::d     d:::::d e:::::::::::::::::e      v:::::v v:::::v     
+      t:::::t           h:::::h     h:::::he::::::eeeeeeeeeee        s::::::s    k:::::::::::k         z::::::z             d:::::d     d:::::d e::::::eeeeeeeeeee        v:::::v:::::v      
+      t:::::t    tttttt h:::::h     h:::::he:::::::e           ssssss   s:::::s  k::::::k:::::k       z::::::z              d:::::d     d:::::d e:::::::e                  v:::::::::v       
+      t::::::tttt:::::t h:::::h     h:::::he::::::::e          s:::::ssss::::::sk::::::k k:::::k     z::::::zzzzzzzz        d::::::ddddd::::::dde::::::::e                  v:::::::v        
+      tt::::::::::::::t h:::::h     h:::::h e::::::::eeeeeeee  s::::::::::::::s k::::::k  k:::::k   z::::::::::::::z ......  d:::::::::::::::::d e::::::::eeeeeeee           v:::::v         
+        tt:::::::::::tt h:::::h     h:::::h  ee:::::::::::::e   s:::::::::::ss  k::::::k   k:::::k z:::::::::::::::z .::::.   d:::::::::ddd::::d  ee:::::::::::::e            v:::v          
+          ttttttttttt   hhhhhhh     hhhhhhh    eeeeeeeeeeeeee    sssssssssss    kkkkkkkk    kkkkkkkzzzzzzzzzzzzzzzzz ......    ddddddddd   ddddd    eeeeeeeeeeeeee             vvv           
+-->
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - TheSkz</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/TheSKZWeb.styles.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    @*@await RenderSectionAsync("Styles", false);*@
+    <!-- styles end -->
+
+    @{
+        var baseuri = Url.Action();
+        if (baseuri != null && baseuri != "/") {
+                                                                                                                                                                                                <base href="@baseuri/" target="_self"/>
+                                                                                                                                                                                                <!-- base uri not null: @Url.Action() -->
+        } else
+        {
+                                                                                                                                                                                        <environment exclude="Development">
+                                                                                                                                                                                            <base href="https://theskz.dev/"/>
+                                                                                                                                                                                        </environment>
+                                                                                                                                                                                        <environment include="Development">
+                                                                                                                                                                                            <base href="https://localhost:44336/"/>
+                                                                                                                                                                                        </environment>
+            
+        }
+    }
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container-fluid">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TheSkz</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="Home" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="Home" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="Home" asp-controller="Home" asp-action="About">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="Socials" asp-controller="Home" asp-action="Index">Socials</a>
+                    </li>
+                    @* <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="ShortLinks" asp-controller="Home" asp-action="Index">ShortLinks</a>
+                    </li> *@
+                </ul>
+
+                <style>
+                    @("@")media all and (min-width: 992px) {
+	                    .navbar .nav-item .dropdown-menu { display: none; }
+	                    .navbar .nav-item:hover .nav-link{   }
+	                    .navbar .nav-item:hover .dropdown-menu{ display: block; }
+	                    .navbar .nav-item .dropdown-menu{ margin-top:0; }
+                    }
+                </style>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+		               <a class="nav-link  dropdown-toggle" href="#" data-bs-toggle="dropdown">Features</a>
+		                <ul class="dropdown-menu">
+			              <li><a class="dropdown-item text-dark" asp-area="ShortLinks" asp-controller="Home" asp-action="Index">ShortLinks</a></li>
+		                </ul>
+		            </li>
+                    @{
+                        string? username = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+
+                        if (username == null)
+{
+                                                                                                <li class="nav-item">
+                                                                                                    <a class="nav-link" asp-area="Users" asp-controller="Home" asp-action="Login">Login</a>
+                                                                                                </li>
+                                                                                                <li class="nav-item">
+                                                                                                    <a class="nav-link" asp-area="Users" asp-controller="Home" asp-action="Register">Register</a>
+                                                                                                    </li>
+                        } else 
+                        {
+                            LayoutModel? layoutModel = (LayoutModel)ViewBag.LayoutModel;
+                            if (layoutModel != null && layoutModel.IsAdministrator)
+                            {
+                                                                                                    <li class="nav-item">
+                                                                                                        <a class="nav-link" asp-area="Administrator" asp-controller="Home" asp-action="Index">Administrator</a>
+                                                                                                    </li>
+                            }
+
+                                                                                                <li class="nav-item">
+                                                                                                    <a class="nav-link" asp-area="Users" asp-controller="Home" asp-action="Me">@username</a>
+                                                                                                </li>
+                                                                                                <li class="nav-item">
+                                                                                                    <a id="btn-logout" style="cursor: pointer" class="nav-link">Logout</a>
+                                                                                                </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="container">
+    <partial name="_CookieConsentPartial" />
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
+
+<footer class="border-top footer text-muted">
+    <div class="container">
+        &copy; 2022 - TheSkz - <a asp-area="" asp-controller="" asp-action="Privacy">Privacy</a>
+    </div>
+</footer>
+<!-- script libs -->
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<!-- end script libs -->
+<!-- logout script -->
+<script>
+    var btn_logout = document.getElementById("btn-logout");
+    
+    if (btn_logout != null) {
+        btn_logout.onclick = async (data) => {
+            await advancedPost("/users/logout");
+        }
+    }
+</script>
+<!-- end logout script -->
+<!-- span script -->
+<script>
+    const spans = document.querySelectorAll("span");
+
+    function copyTextAction(i) {
+        navigator.clipboard.writeText(i.dataset.copydata)
+
+        if (i.dataset.doalert == "true") {
+            console.log(i.dataset.alertmessage);
+            toastr.success(i.dataset.alertmessage);
+        }
+    }
+
+    spans.forEach((i, e) => {
+        if (i.classList.contains("copyText")) {
+            i.onclick = (event) => copyTextAction(event.target);
+            
+            if (i.dataset.generate == "true") {
+                // content
+                if (i.dataset.copydata != null) {
+                    i.textContent = i.dataset.copydata;
+                }
+
+                // title    
+                if (i.dataset.name != null) {
+                    i.title = `Copy ${i.dataset.name}: ${i.dataset.copydata}`;
+                }
+
+                // alert message
+                if (i.dataset.doalert == "true" && i.dataset.alertmessage == null) {
+                    if (i.dataset.name != null) {
+                        i.dataset.alertmessage = `Copied ${i.dataset.name}!`;
+                    } else {
+                        i.dataset.alertmessage = "Copied!"
+                    }
+                }
+            }
+        }
+    });
+</script>
+<!-- end span script -->
+<!-- post script -->
+<script>
+    var postUrl = "";
+    var postData = {};
+    var postDetail = {};
+    var mfaForm = document.getElementById("mfa-form");
+    
+     function closeForm() {
+         mfaForm.style.display = "none";
+         reset();
+     }
+
+    function reset() {
+        postUrl = "";
+        postData = {};
+    }
+
+    async function _doPost(
+        url,
+        data = {}
+    ) {
+        const _response = await fetch(url, {
+            method: "POST", // *GET, POST, PUT, DELETE, etc.
+            mode: "cors", // no-cors, *cors, same-origin
+            cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: "same-origin", // include, *same-origin, omit
+            redirect: "follow", // manual, *follow, error
+            referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+        });
+
+        return _response.json();
+    }
+
+    async function doPost(
+        url,
+        data = {}
+    ) {
+        var response = await _doPost(url, data);
+        
+        if (response["message"] != null) {
+            toastr.warning(`[${response["for"]}] ${response["message"]}`);
+        }
+        if (response["jumpTo"] != null) {
+            setTimeout(
+                () => {
+                    var jumpTo = new URL(response["jumpTo"], document.baseURI);
+                    window.location.href = jumpTo.href;
+                },
+                2000
+            );
+        }
+        return response;
+    }
+    
+    async function advancedPost(
+        url = "", 
+        data = {},
+        details = {},
+        fromMfa = false
+    ) {
+        var response = {};
+
+        if (fromMfa) {
+            postDetail["mfa"] = details["mfa"];
+            postDetail["mfaCode"] = details["mfaCode"];
+
+            postData["mfaCode"] = details["mfaCode"];
+            
+            details = postDetail;
+            url = postUrl;
+            data = postData;
+        }
+
+        if (details["mfa"] == true) {
+            if (details["mfaCode"] == null) {
+                postUrl = url;
+                postData = data;
+                postDetail = details;
+
+                mfaForm.style.display = "block";
+            } else {
+                mfaForm.style.display = "none";
+                
+                reset();
+
+                response = await doPost(url, data);
+            }
+        } else {
+            response = await doPost(url, data);
+            if ((response["tags"] || []).includes("doMFA")) {
+                postUrl = url;
+                postData = data;
+
+                mfaForm.style.display = "block";
+            }
+        }
+
+        if (details["onSuccess"] != null && response["type"] == "Success") {
+            return await details["onSuccess"](response);
+        } else {
+            if (details["onError"] != null) {
+                return await details["onError"](response);
+            }
+        }
+    }
+</script>
+<!-- end post script -->
+
+@await RenderSectionAsync("Scripts", required: false)
+<!-- partial scripts -->
+@await RenderSectionAsync("PartialScripts", required: false)
+<!-- end partial scripts -->
+</body>
+</html>

@@ -1,0 +1,310 @@
+﻿@using TheSKZWeb.Areas.Permissions.Models.Administrator.Out
+@model Out_ManagePermission
+@{
+    ViewData["Title"] = "Manage Permission";
+}
+
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+
+<div class="border p-3 mt4">
+    <div class="row pb-2">
+        <h2 class="text-primary">
+            Manage Permission <span class="copyText" data-name="Permission Name" data-copydata="@("@")@Model.Name" data-doalert="true" data-generate="true"></span> <span class="copyText" style="color: #DE3394" data-name="Permission Id" data-copydata="@Model.PermissionId" data-doalert="true" data-generate="true"></span>
+        </h2>
+        <br />
+    </div>
+</div>
+
+
+<div class="row pt-5">
+    <h4>Permission Id</h4>
+    <div class="col-md-6">
+        <div class="form-outline">
+            <input type="text" id="input-id" class="form-control" title="Permission Id" placeholder="@Model.PermissionId" spellcheck="false" readonly/>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row pt-4">
+    <h4>Permission Name</h4>
+    <div class="col-md-6">
+        <div class="form-outline">
+            <input type="text" id="input-name" class="form-control" pattern=".{3,21}" title="Permission Name" spellcheck="false" placeholder="@Model.Name"/>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <button type="button" id="submit-name" class="btn btn-primary text-start" style="width: 280px" disabled>
+            <i class="bi bi-arrow-clockwise"></i> &nbsp; <span id="submit-name-text">Apply name edit</span>
+        </button>
+    </div>
+</div>
+
+<div class="row pt-4">
+    <h4>Permission Parent</h4>
+    <div class="col-md-6">
+        <div class="form-outline">
+            <input type="text" id="input-parent" class="form-control" pattern=".{3,21}" title="Permission Parent" spellcheck="false" placeholder="@Model.Parent"/>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <button type="button" id="submit-parent" class="btn btn-primary text-start" style="width: 280px" disabled>
+            <i class="bi bi-arrow-clockwise"></i> &nbsp; <span id="submit-parent-text">Apply parent edit</span>
+        </button>
+    </div>
+</div>
+
+<div class="row pt-4">
+    <div class="col-md-6">
+        <div style="width: 50%; float: left;">
+            <div class="ms-0 me-1">
+                <h4>Permission Critical</h4>
+                <div style="width: 20%; float: left;">
+                    <div class="ms-0 me-1">
+                        <div class="checkbox">
+                            <input id="input-critical" type="checkbox" data-toggle="toggle" @(Model.IsCritical?"checked":"")>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-left: 20%;">
+                    <div class="ms-1 me-0">
+                        <button type="button" id="submit-critical" class="btn btn-primary text-start" style="width: 100%" disabled>
+                            <i class="bi bi-arrow-clockwise"></i> &nbsp; <span id="submit-critical-text">Apply critical edit</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="margin-left: 50%;">
+            <div class="ms-1 me-0">
+                <h4>Permission Default</h4>
+                <div style="width: 20%; float: left;">
+                    <div class="ms-0 me-1">
+                        <div class="checkbox">
+                            <input id="input-default" type="checkbox" data-toggle="toggle" @(Model.IsDefault?"checked":"")>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-left: 20%; ">
+                    <div class="ms-1 me-0">
+                        <button type="button" id="submit-default" class="btn btn-primary text-start" style="width: 100%" disabled>
+                            <i class="bi bi-arrow-clockwise"></i> &nbsp; <span id="submit-default-text">Apply default edit</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row pt-4">
+    <div class="col-md-6">
+        <div style="width: 50%; float: left;">
+            <div class="ms-0 me-1">
+                <h4>Created At</h4>
+                <div class="form-outline">
+                    <input type="text" id="input-created-at" class="form-control" spellcheck="false" placeholder="..." value="@Model.CreatedAt" readonly/>
+                </div>
+            </div>
+        </div>
+        <div style="margin-left: 50%;">
+            <div class="ms-1 me-0">
+                <h4>Last Modified At</h4>
+                <div class="form-outline">
+                    <input type="text" id="input-last-modified-at" class="form-control" spellcheck="false" placeholder="..." value="@Model.LastModifiedAt" readonly/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+
+<div class="row pt-4">
+    <div class="col-md-6">
+        <div class="w-100 btn-group" role="group">
+            <button type="button" id="submit-delete" class="w-50 btn btn-danger rounded text-start ms-0 me-1">
+                <i class="bi bi-trash"></i> &nbsp; Delete Permission
+            </button>
+            <div class="w-50 btn-group ms-1 me-0">
+                <button id="back" type="button" class="btn btn-primary rounded-left text-start">
+                    <i class="bi bi-caret-left"></i> &nbsp; Back to overview
+                </button>
+                <button id="toggle-pin" type="button" class="w-fit btn btn-success rounded-right text-center">
+                    <i class="bi bi-pin-angle"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<partial name="_MFAPromptPartial"></partial>
+
+@section PartialScripts {
+    <!-- mfa script -->
+    <script src="~/js/_mfa.js" asp-append-version="true"></script>
+    <!-- end mfa script -->
+}
+
+
+
+@section Scripts {
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+    <script>
+
+        $(document).ready(function() {
+            var permissionId = "@Model.PermissionId";
+
+            var original_permission_name = "@Model.Name";
+            var input_permission_name = document.getElementById("input-name");
+            var submit_permission_name = document.getElementById("submit-name");
+            var submit_permission_text = document.getElementById("submit-name-text");
+
+            var original_permission_parent = "@Model.Parent";
+            var input_permission_parent = document.getElementById("input-parent");
+            var submit_permission_parent = document.getElementById("submit-parent");
+            var submit_permission_parent_text = document.getElementById("submit-parent-text");
+
+            var original_permission_critical = @(Model.IsCritical?"true":"false");
+            var input_permission_critical = document.getElementById("input-critical");
+            var submit_permission_critical = document.getElementById("submit-critical");
+            var submit_permission_critical_text = document.getElementById("submit-critical-text");
+
+            var original_permission_default = @(Model.IsDefault?"true":"false");
+            var input_permission_default = document.getElementById("input-default");
+            var submit_permission_default = document.getElementById("submit-default");
+            var submit_permission_default_text = document.getElementById("submit-default-text");
+
+            var toggle_pin_mode = 1; // 0 = not pin | 1 = pin
+            var toggle_pin = document.getElementById("toggle-pin");
+
+            var back = document.getElementById("back");
+
+            var submit_delete = document.getElementById("submit-delete");
+
+
+            input_permission_name.oninput = (data) => {
+                submit_permission_name.disabled = (data.target.value == "" || data.target.value == original_permission_name);
+                
+                if (!submit_permission_name.disabled && data.target.value == " ") {
+                    data.target.value = original_permission_name;
+                }
+            }
+
+            input_permission_parent.oninput = (data) => {
+                submit_permission_parent.disabled = (data.target.value == "" || data.target.value == original_permission_parent);
+                
+                if (!submit_permission_parent.disabled && data.target.value == " ") {
+                    data.target.value = original_permission_parent;
+                }
+            }
+            
+
+            input_permission_critical.onchange = (data) => {
+
+                submit_permission_critical.disabled = (data.target.checked == original_permission_critical);
+                
+            }
+
+            input_permission_default.onchange = (data) => {
+
+                submit_permission_default.disabled = (data.target.checked == original_permission_default);
+                
+            }
+
+
+
+            submit_permission_name.onclick = async (data) => {
+                await advancedPost(
+                    "editname/",
+                    {
+                        "Name": input_permission_name.value
+                    },
+                    {
+                        "onSuccess": async (data) => {
+                            original_permission_name = input_permission_name.value;
+                            input_permission_name.value = "";
+                            input_permission_name.placeholder = original_permission_name;
+                            submit_permission_name.disabled;
+                        }
+                    }
+                );
+            }
+
+            submit_permission_parent.onclick = async (data) => {
+                await advancedPost(
+                    "editparent/",
+                    {
+                        "Parent": input_permission_parent.value
+                    },
+                    {
+                        "onSuccess": async (data) => {
+                            original_permission_parent = input_permission_parent.value;
+                            input_permission_parent.value = "";
+                            input_permission_parent.placeholder = original_permission_parent;
+                            submit_permission_parent.disabled;
+                        }
+                    }
+                );
+            }
+
+            submit_permission_critical.onclick = async (data) => {
+                await advancedPost(
+                    "togglecritical/",
+                    {},
+                    {
+                        "mfa": true,
+                        "onSuccess": async (data) => {
+                            original_permission_critical = !original_permission_critical;
+                            submit_permission_critical.disabled = true;
+                        }
+                    }
+                );
+            }
+
+            submit_permission_default.onclick = async (data) => {
+                await advancedPost(
+                    "toggledefault/",
+                    {},
+                    {
+                        "onSuccess": async (data) => {
+                            original_permission_default = !original_permission_default;
+                            submit_permission_default.disabled = true;
+                        }
+                    }
+                );
+            }
+
+            submit_delete.onclick = async (data) => { 
+                await advancedPost(
+                    "delete/",
+                    {}
+                )
+            }
+
+            back.onclick = (data) => {
+                var url = new URL("/administrator/permissions", document.baseURI);
+                if (toggle_pin_mode == 1) {
+                    url.searchParams.set("Highlighted", permissionId);
+                }
+
+                document.location.href = url.href;
+            }
+
+            toggle_pin.onclick = (data) => {
+                toggle_pin_mode = (toggle_pin_mode + 1) % 2;
+                if (toggle_pin_mode == 0) {
+                    toggle_pin.classList.remove("btn-success");
+                    toggle_pin.classList.add("btn-danger")
+                } else {
+                    toggle_pin.classList.remove("btn-danger");
+                    toggle_pin.classList.add("btn-success");
+                }
+            }
+        });
+    </script>
+}

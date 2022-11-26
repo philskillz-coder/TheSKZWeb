@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Administrator";
+}
+
+
+<style>
+    .grid-container {
+        display: grid;
+
+        column-gap: 15px;
+        row-gap: 15px;
+        
+        grid-template-columns: auto auto auto;
+        /*background-color: #2196F3;*/
+        padding: 10px;
+    }
+
+    .grid-item {
+        background-color: rgba(255, 255, 255, 0.8);
+        /* border: 1px solid rgba(0, 0, 0, 0.8); */
+        padding: 0px;
+        font-size: 30px;
+        text-align: center;
+        height: 200px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center
+    }
+
+    a.grid-btn {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center
+    }
+
+</style>
+
+<div class="grid-container">
+    <div class="grid-item">
+        <a asp-area="Permissions" asp-controller="Administrator" asp-action="ManagePermissions" class="btn btn-primary grid-btn">
+            <i class="bi bi-gear"></i> &nbsp; Manage Permissions
+        </a>
+    </div>
+    <div class="grid-item">
+        <a asp-area="Users" asp-controller="Administrator" asp-action="ManageUsers" class="btn btn-primary grid-btn">
+            <i class="bi bi-gear"></i> &nbsp; Manage Users
+        </a>
+    </div>
+    <div class="grid-item">
+        <a asp-area="Roles" asp-controller="Administrator" asp-action="ManageRoles" class="btn btn-primary grid-btn">
+            <i class="bi bi-gear"></i> &nbsp; Manage Roles
+        </a>
+    </div>
+    <div class="grid-item">
+        <a asp-area="ShortLinks" asp-controller="Administrator" asp-action="ManageShortLinks" class="btn btn-primary grid-btn">
+            <i class="bi bi-gear"></i> &nbsp; Manage ShortLinks
+        </a>
+    </div>
+</div>

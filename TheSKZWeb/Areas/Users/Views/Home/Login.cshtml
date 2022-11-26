@@ -1,0 +1,163 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+
+    <link rel="stylesheet" href="~/css/user_login.css" asp-append-version="true"/>
+
+
+
+<div class="header">
+    <div class="inner-header flex">
+        <form method="post">
+            <div class="border p-3 mt4">
+                <div class="row pb-2">
+                    <h2 class="text-primary">Login</h2>
+                    <hr />
+                </div>
+                <div class="mb-3">
+                    <label id="input-name-label" for="input-name">Username</label>
+                    <div class="input-group">
+                        <div id="input-name-icon" class="input-group-prepend" style="cursor: pointer;">
+                            <div class="input-group-text">
+                                <span id="input-name-icon-text">
+                                    &commat;
+                                </span>
+                            </div>
+                        </div>
+                        <input id="input-name" name="input-name" class="form-control" placeholder="Username" spellcheck="false">
+                        <div class="input-group-append">
+                            <div id="input-name-clear" class="input-group-text" style="cursor: pointer">
+                                <i class="bi bi-x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="input-password">Password</label>
+                    <div class="input-group">
+                        <div id="input-password-vis" class="input-group-prepend" style="cursor: pointer;">
+                            <div class="input-group-text">
+                                <span id="input-password-vis-text">
+                                    <i class="bi bi-eye"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <input id="input-password" type="password" name="input-password" class="form-control" placeholder="Password" spellcheck="false">
+                        <div class="input-group-append">
+                            <div id="input-password-clear" class="input-group-text" style="cursor: pointer">
+                                <i class="bi bi-x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*<div class="mb-3">
+                    <label asp-for="TwoFactorKey">2FA Key</label>
+                    <input asp-for="TwoFactorKey" class="form-control" type="password" title="2FA Key" placeholder="Only if you have 2FA enabled" spellcheck="false"/>
+                </div>*@
+                <button id="submit-login" type="button" class="btn btn-primary" style="width: 150px">Login&excl;</button>
+            </div>
+        </form>
+    </div>
+    <div>
+        <svg 
+        class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+            <defs>
+                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            </defs>
+            <g class="parallax">
+                <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
+                <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+                <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+                <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+            </g>
+        </svg>
+    </div>
+</div>
+
+<partial name="_MFAPromptPartial"></partial>
+
+@section PartialScripts {
+    <!-- mfa script -->
+    <script src="~/js/_mfa.js" asp-append-version="true"></script>
+    <!-- end mfa script -->
+}
+
+@section Scripts {
+    <!-- login script -->
+    <script>
+        $(document).ready(function() {
+
+            async function delay(time, after) {
+                return new Promise(resolve => setTimeout(resolve, time)).then(async () => { await after() });
+            }
+
+            var input_name_label = document.getElementById("input-name-label");
+            var input_name_icon = document.getElementById("input-name-icon");
+            var input_name_icon_text = document.getElementById("input-name-icon-text");
+            var input_name_mode = 1; // 1 = name | 0 = id
+            var input_name = document.getElementById("input-name");
+            var input_name_clear = document.getElementById("input-name-clear");
+            
+            var input_password_vis_state = 0; // 0 = not vis | 1 = vis
+            var input_password_vis = document.getElementById("input-password-vis");
+            var input_password_vis_text = document.getElementById("input-password-vis-text");
+            var input_password = document.getElementById("input-password");
+            var input_password_clear = document.getElementById("input-password-clear");
+
+            var submit_login = document.getElementById("submit-login");
+
+            input_name_icon.onclick = (data) => {
+                input_name_mode = (input_name_mode + 1) % 2;
+                
+                if (input_name_mode == 0) {
+                    input_name_icon_text.textContent = "#";
+                    input_name_label.textContent = "User Id";
+                    input_name.placeholder = "User Id";
+                    input_name.value = "";
+
+                } else {
+                    input_name_icon_text.textContent = "@("@")";
+                    input_name_label.textContent = "Username";
+                    input_name.placeholder = "Username";
+                    input_name.value = "";
+                }
+            }
+
+            input_name_clear.onclick = (data) => {
+                input_name.value = "";
+            }
+
+
+            input_password_vis.onclick = (data) => {
+                input_password_vis_state = (input_password_vis_state + 1) % 2;
+
+                if (input_password_vis_state == 0) {
+                    input_password.type = "password";
+                    input_password_vis_text.innerHTML = "<i class=\"bi bi-eye\"></i>";
+                } else {
+                    input_password.type = "text";
+                    input_password_vis_text.innerHTML = "<i class=\"bi bi-eye-slash\"></i>";
+                }
+            }
+
+            input_password_clear.onclick = (data) => {
+                input_password.value = "";
+            }
+
+            submit_login.onclick = async (btndata) => { 
+                await advancedPost(
+                    "",
+                    {
+                        "UserIdentifier": (Boolean(input_name_mode) ? "@("@")" : "")  + input_name.value,
+                        "Password": input_password.value
+                    }
+                )
+            }
+        });
+    </script>
+    <!-- end login script -->
+
+    
+}

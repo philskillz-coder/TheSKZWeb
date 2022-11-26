@@ -1,0 +1,170 @@
+﻿@using TheSKZWeb.Areas.Users.Models.Administrator.Out
+@model Out_ManageUser
+@{
+    ViewData["Title"] = "Manage User";
+}
+
+<div class="border p-3 mt4">
+    <div class="row pb-2">
+        <h2 class="text-primary">
+            Manage User <span class="copyText" data-name="Username" data-copydata="@("@")@Model.Username" data-doalert="true" data-generate="true"></span> <span class="copyText" style="color: #DE3394" data-name="User id" data-copydata="@Model.UserId" data-doalert="true" data-generate="true"></span>
+        </h2>
+        <br />
+    </div>
+</div>
+
+
+<div class="row pt-5">
+    <h4>User Id</h4>
+    <div class="col-md-6">
+        <div class="form-outline">
+            <input type="text" id="input-userId" class="form-control" title="User Id" placeholder="@Model.UserId" spellcheck="false" readonly/>
+        </div>
+    </div>
+</div>
+
+<div class="row pt-4">
+    <h4>Username</h4>
+    <div class="col-md-6">
+        <div class="form-outline">
+            <input type="text" id="input-username" class="form-control" pattern=".{3,21}" title="@(Model.UserId)'s Username" placeholder="@Model.Username" spellcheck="false"/>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <button type="button" id="submit-username" class="btn btn-primary text-start" style="width: 250px" disabled>
+            <i class="bi bi-arrow-clockwise"></i> &nbsp; <span id="input-username-text">Apply username edit</span>
+        </button>
+    </div>
+</div>
+
+<div class="row pt-4">
+    <div class="col-md-6">
+        <div style="width: 50%; float: left;">
+            <div class="ms-0 me-1">
+                <h4>Created At</h4>
+                <div class="form-outline">
+                    <input type="text" id="input-created-at" class="form-control" spellcheck="false" placeholder="..." value="@Model.CreatedAt" readonly/>
+                </div>
+            </div>
+        </div>
+        <div style="margin-left: 50%;">
+            <div class="ms-1 me-0">
+                <h4>Last Modified At</h4>
+                <div class="form-outline">
+                    <input type="text" id="input-last-modified-at" class="form-control" spellcheck="false" placeholder="..." value="@Model.LastModifiedAt" readonly/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+<div class="row pt-4">
+    <div class="col-md-6">
+        <div class="w-100 btn-group" role="group">
+            <a type="button" asp-area="Users" asp-controller="Administrator" asp-action="ManageUserRoles" asp-route-userId="@Model.UserId"
+                class="btn btn-primary rounded text-start" style="width: 200px">
+                <i class="bi bi-gear"></i> &nbsp; Manage Roles
+            </a>
+            <a type="button" asp-area="Users" asp-controller="Administrator" asp-action="ManageUserPermissions" asp-route-userId="@Model.UserId"
+                class="btn btn-primary rounded ms-2 me-0 text-start" style="width: 200px">
+                <i class="bi bi-gear"></i> &nbsp; Manage Permissions
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row pt-4">
+    <div class="col-md-6">
+        <div class="w-100 btn-group" role="group">
+            <button type="button" id="submit-delete" class="btn btn-danger rounded text-start" style="width: 200px">
+                <i class="bi bi-trash"></i> &nbsp; Delete User
+            </button>
+            <div class="w-50 btn-group ms-1 me-0">
+                <button id="back" type="button" class="btn btn-primary rounded-left text-start">
+                    <i class="bi bi-caret-left"></i> &nbsp; Back to overview
+                </button>
+                <button id="toggle-pin" type="button" class="w-fit btn btn-success rounded-right text-center">
+                    <i class="bi bi-pin-angle"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+<partial name="_MFAPromptPartial"></partial>
+
+@section Scripts {
+    <script>
+
+        $(document).ready(function() {
+            var userId = "@Model.UserId";
+
+            var original_username = "@Model.Username";
+            var input_username = document.getElementById("input-username");
+            var submit_username = document.getElementById("submit-username");
+
+            var toggle_pin_mode = 1; // 0 = not pin | 1 = pin
+            var toggle_pin = document.getElementById("toggle-pin");
+
+            var back = document.getElementById("back");
+
+            var submit_delete = document.getElementById("submit-delete");
+
+            input_username.oninput = (data) => {
+                submit_username.disabled = (data.target.value == "" || data.target.value == original_username);
+            }
+
+            submit_username.onclick = async (data) => {
+                await advancedPost(
+                    "editusername/",
+                    {
+                        "Username": input_username.value
+                    },
+                    {
+                        "onSuccess": async (data) => {
+                            original_username = input_username.value;
+                            input_username.value = "";
+                            input_username.placeholder = original_username;
+                            submit_username.disabled = true;
+                        }
+                    }
+                );
+            }
+
+
+
+            submit_delete.onclick = async (data) => { 
+                await advancedPost(
+                    "deleteuser/",
+                    {},
+                    {
+                        "mfa": true
+                    }
+                )
+            }
+
+
+            back.onclick = (data) => {
+                var url = new URL("/administrator/users", document.baseURI);
+                if (toggle_pin_mode == 1) {
+                    url.searchParams.set("Highlighted", userId);
+                }
+
+                document.location.href = url.href;
+            }
+
+            toggle_pin.onclick = (data) => {
+                toggle_pin_mode = (toggle_pin_mode + 1) % 2;
+                if (toggle_pin_mode == 0) {
+                    toggle_pin.classList.remove("btn-success");
+                    toggle_pin.classList.add("btn-danger")
+                } else {
+                    toggle_pin.classList.remove("btn-danger");
+                    toggle_pin.classList.add("btn-success");
+                }
+            }
+        });
+    </script>
+}

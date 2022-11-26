@@ -1,0 +1,159 @@
+﻿@using TheSKZWeb.Areas.Users.Models.Administrator.Out
+@model Out_ManageUserPermissions
+@{
+    ViewData["Title"] = "Manage user Permissions";
+}
+
+<div class="border p-3 mt4">
+    <div class="row pb-2">
+        <h2 class=text-primary>
+            Manage <span class="copyText" data-name="Username" data-copydata="@("@")@Model.Username" data-doalert="true" data-generate="true"></span>&apos;s <span class="copyText" style="color: #DE3394" data-name="User Id" data-copydata="@Model.UserId" data-doalert="true" data-generate="true"></span> Permissions
+        </h2>
+        <br />
+    </div>
+</div>
+
+
+
+<div class="row pt-4">
+    <div class="col-md-6">
+        <div class="w-100 btn-group" role="group">
+            <a type="button" asp-area="Users" asp-controller="Administrator" asp-action="ManageUser" asp-route-userId="@Model.UserId"
+                class="btn btn-primary rounded ms-2 me-0 text-start" style="width: 200px">
+                <i class="bi bi-caret-left"></i> &nbsp; Back to overview
+            </a>
+        </div>
+    </div>
+</div>
+<br />
+
+<div>
+    <h4>Permissions</h4>
+    <div id="granted-permissions">
+        @foreach (_Permission permission in Model.Permissions)
+        {
+            <div id="permission-@permission.PermissionId">
+                <div class="row pt-4">
+                    <div class="col-md-6">
+                        <div class="form-outline">
+                            <input type="text" class="form-control" pattern=".{3,21}" placeholder="@permission.Name" spellcheck="false" readonly/>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" id="permission-@permission.PermissionId-delete" class="btn btn-primary text-center delpem" style="width: 50px" data-permissionId="@permission.PermissionId" data-permissionName="@permission.Name" onclick="revokePermission(this)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    
+
+    <div class="row pt-4">
+        <div class="col-md-6">
+            <div class="form-outline">
+                <input type="text" id="grant-permission" class="form-control" pattern=".{3,21}" spellcheck="false" placeholder="..."/>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <button type="button" id="permission-new-create" class="btn btn-primary text-center addpem" style="width: 50px" onclick="grantPermission(this)">
+                <i class="bi bi-plus-square"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<partial name="_MFAPromptPartial"></partial>
+
+@section PartialScripts {
+    <!-- mfa script -->
+    <script src="~/js/_mfa.js" asp-append-version="true"></script>
+    <!-- end mfa script -->
+}
+
+@section Scripts {
+    <script>
+        var p_input = document.getElementById("grant-permission");
+        var granted_permissions = document.getElementById("granted-permissions");
+
+        async function grantPermission(btndata) {
+            await advancedPost(
+                "grant",
+                {
+                    "PermissionName": p_input.value
+                },
+                {
+                    "onSuccess": async (data) => {
+                        var gPermission = document.createElement("div");
+                        gPermission.id = "permission-" + data["data"]["permissionIdentifier"];
+
+                        var gpRow = document.createElement("div");
+                        gpRow.classList.add("row", "pt-4");
+
+                        var gprC1 = document.createElement("div");
+                        gprC1.classList.add("col-md-6");
+
+                        var gprc1F = document.createElement("div");
+                        gprc1F.classList.add("form-outline");
+
+                        var gprc1fI = document.createElement("input");
+                        gprc1fI.type = "text";
+                        gprc1fI.classList.add("form-control");
+                        gprc1fI.pattern = ".{3,21}";
+                        gprc1fI.placeholder = p_input.value;
+                        gprc1fI.readOnly = true;
+
+
+                
+                        var gprC2 = document.createElement("div");
+                        gprC2.classList.add("col-md-6");
+
+                        var gprc2B = document.createElement("button");
+                        gprc2B.type = "button";
+                        gprc2B.id = "permission-" + data["data"]["permissionIdentifier"] + "-delete";
+                        gprc2B.classList.add("btn", "btn-primary", "text-center", "delpem");
+                        gprc2B.style = "width: 50px";
+                        gprc2B.dataset.permissionid = data["data"]["permissionIdentifier"];
+                        gprc2B.dataset.permissionname = p_input.value;
+                        gprc2B.onclick = "revokePermission(this)";
+
+                        var gprc2bI = document.createElement("i");
+                        gprc2bI.classList.add("bi", "bi-trash");
+
+                        p_input.value = "";
+
+
+                        gprc1F.appendChild(gprc1fI);
+                        gprC1.appendChild(gprc1F);
+
+                        gprc2B.appendChild(gprc2bI);
+                        gprC2.appendChild(gprc2B);
+
+                        gpRow.appendChild(gprC1);
+                        gpRow.appendChild(gprC2);
+
+                        gPermission.appendChild(gpRow);
+
+                        granted_permissions.appendChild(gPermission);
+                    }
+                }
+            );
+        }
+
+        async function revokePermission(btndata) {
+            await advancedPost(
+                "revoke",
+                {
+                    "permissionId": btndata.dataset.permissionid
+                },
+                {
+                    "mfa": true,
+                    "onSuccess": async (data) => {
+                        document.getElementById("permission-" + btndata.dataset.permissionid).remove();
+                    }
+                }
+            );
+        }
+    </script>
+}

@@ -1,0 +1,139 @@
+﻿@using TheSKZWeb.Areas.Users.Models.Administrator.Out
+@model Out_ManageUsers
+@{
+    ViewData["Title"] = "Benutzer Verwalten";
+}
+
+<style>
+    .td {
+        vertical-align: middle;
+    }
+    td.td_center {
+        text-align: center;
+    }
+</style>
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class=text-primary>Manage Users</h2>
+        </div>
+        <div class="col-6 text-end">
+            <div class="w-100 btn-group" role="group">
+                <a asp-area="Administrator" asp-controller="Home" asp-action="Index" class="btn btn-primary rounded ms-0 me-1">
+                    <i class="bi bi-caret-left"></i> &nbsp; Back to overview
+                </a>
+                <a asp-area="Users" asp-controller="Administrator" asp-action="ManageUsersCreate" class="btn btn-primary rounded ms-1 me-0">
+                    <i class="bi bi-plus-square-dotted"></i> &nbsp; New User
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+@if (Model.Highlighted != null)
+{
+    <div id="jumpToHighlighted" class="alert alert-info alert-dismissible fade show" role="alert">
+        Jump to the highlighted user
+        <a class="accept-policy close" data-dismiss="alert" aria-label="Close" href="#" onclick="highlightedRow.scrollIntoView();">
+            <span aria-hidden="true">Jump</span>
+        </a>
+    </div>
+}
+
+<table class="table table-bordered table-striped table-hover" style="width: 100%">
+    <thead>
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+                Username
+            </th>
+            <th>
+                Critical
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Highlighted != null)
+        {
+            <tr id="Highlighted-Top" class="table-success">
+                <td class="td_center" width="10%">
+                    <span class="copyText" style="color: #DE3394" data-name="User Id" data-copydata="@Model.Highlighted.UserId" data-doalert="true" data-generate="true"></span>
+                </td>
+                <td width="55%">
+                    <span class="copyText" data-name="Username" data-copydata="@Model.Highlighted.Username" data-doalert="true" data-generate="true"></span>
+                </td>
+                <td class="@(Model.Highlighted.CriticalPerms?"table-danger":"") td_center" width="10%">
+                    @{
+                        if (Model.Highlighted.CriticalPerms) {
+                                <i class="bi bi-check" title="Critical Permissions"></i>
+                        } else
+                        {
+                                <i class="bi bi-x" title="Non-Critical Permissions"></i>
+                        }
+                    }
+                </td>
+                <td> 
+                    <div class="w-100 btn-group" role="group">
+                        <a class="btn btn-primary rounded ms-0 me-1" asp-area="Users" asp-controller="Administrator" asp-action="ManageUser" asp-route-userId="@Model.Highlighted.UserId">
+                            <i class="bi bi-gear"></i> &nbsp; Manage
+                        </a>
+                        <a class="btn btn-danger rounded ms-1 me-0" asp-area="Users" asp-controller="Administrator" asp-action="ManageUsers">
+                            <i class="bi bi-pin-angle"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        }
+        @foreach (_User user in Model.Users)
+        {
+            <tr id="@(user.Highlighted ? "Highlighted" : "")">
+                <td class="@(user.Highlighted? "table-success" : "") td_center" width="10%">
+                    <span class="copyText" style="color: #DE3394" data-name="User Id" data-copydata="@user.UserId" data-doalert="true" data-generate="true"></span>
+                </td>
+                <td width="55%">
+                    <span class="copyText" data-name="Username" data-copydata="@user.Username" data-doalert="true" data-generate="true"></span>
+                </td>
+                <td class="@(user.CriticalPerms?"table-danger":"") td_center" width="10%">
+                    @{
+                        if (user.CriticalPerms) {
+                                <i class="bi bi-check" title="Critical Permissions"></i>
+                        } else
+                        {
+                                <i class="bi bi-x" title="Non-Critical Permissions"></i>
+                        }
+                    }
+                </td>
+                <td> 
+                    <div class="w-100 btn-group" role="group">
+                        <a class="btn btn-primary rounded ms-0 me-1" asp-area="Users" asp-controller="Administrator" asp-action="ManageUser" asp-route-userId="@user.UserId">
+                            <i class="bi bi-gear"></i> &nbsp; Manage
+                        </a>
+                        @if (!user.Highlighted) {
+                            <a class="btn btn-success rounded ms-1 me-0" asp-area="Users" asp-controller="Administrator" asp-action="ManageUsers" asp-route-Highlighted="@user.UserId">
+                                <i class="bi bi-pin-angle"></i>
+                            </a>
+                        } else
+                        {
+                            <a class="btn btn-danger rounded ms-1 me-0" asp-area="Users" asp-controller="Administrator" asp-action="ManageUsers">
+                                <i class="bi bi-pin-angle"></i>
+                            </a>
+                        }
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        
+    </script>
+}

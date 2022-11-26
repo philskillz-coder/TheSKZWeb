@@ -1,0 +1,26 @@
+﻿<style>
+    .formContainer .btn:hover,
+    .openButton:hover {
+        opacity: 1;
+    }
+</style>
+
+<div style="position: relative; text-align: center; width: 100%;">
+    <div style="display: none; position: fixed; left: 45%; top: 5%; transform: translate(-50%, 5%); z-index: 9;" id="mfa-form">
+        <div class="" style="height: 65vh; width: 100%; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; text-align: center;">
+            <form class="formContainer" style="max-width: 300px; padding: 20px; background-color: #f6f6f6; border-radius: 25px;">
+                <div class="border p-3 mt4">
+                    <div class="row pb-2">
+                        <h2 class="text-primary">2FA</h2>
+                        <hr />
+                    </div>
+                    <div class="mb-3">
+                        <input id="mfa-input" class="form-control" type="password" pattern=".{6,6}" placeholder="6-Digit-Code here" title="2FA Code" spellcheck="false" required/>
+                    </div>
+                    <button type="button" class="btn btn-primary mb-1" onclick="mfaPost()" style="width: 150px">Submit&excl;</button><br />
+                    <button type="button" class="btn btn-danger cancel mt-1" onclick="closeForm()" style="width: 150px">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

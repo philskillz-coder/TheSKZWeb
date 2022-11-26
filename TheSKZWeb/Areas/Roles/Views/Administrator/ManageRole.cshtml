@@ -1,0 +1,247 @@
+﻿@using TheSKZWeb.Areas.Roles.Models.Administrator.Out
+@model Out_ManageRole
+@{
+    ViewData["Title"] = "Manage Role";
+}
+
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+
+<div class="border p-3 mt4">
+    <div class="row pb-2">
+        <h2 class="text-primary">
+            Manage Role <span class="copyText" data-name="Role Name" data-copydata="@("@")@Model.Name" data-doalert="true" data-generate="true"></span> <span class="copyText" style="color: #DE3394" data-name="Role Id" data-copydata="@Model.RoleId" data-doalert="true" data-generate="true"></span>
+        </h2>
+        <br />
+    </div>
+</div>
+
+
+<div class="row pt-5">
+    <h4>Role Id</h4>
+    <div class="col-md-6">
+        <div class="form-outline">
+            <input type="text" id="input-id" class="form-control" title="Role Id" placeholder="@Model.RoleId" spellcheck="false" readonly/>
+        </div>
+    </div>
+</div>
+
+<div class="row pt-4">
+    <h4>Role Name</h4>
+    <div class="col-md-6">
+        <div class="form-outline">
+            <input type="text" id="input-name" class="form-control" pattern=".{3,21}" title="Role Name" spellcheck="false" placeholder="@Model.Name"/>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <button type="button" id="submit-name" class="btn btn-primary text-start" style="width: 280px" disabled>
+            <i class="bi bi-arrow-clockwise"></i> &nbsp; <span id="submit-name-text">Apply role name edit</span>
+        </button>
+    </div>
+</div>
+
+<div class="row pt-4">
+    <div class="col-md-6">
+        <div style="width: 50%; float: left;">
+            <div class="ms-0 me-1">
+                <h4>Role Critical</h4>
+                <div style="width: 20%; float: left;">
+                    <div class="ms-0 me-1">
+                        <div class="checkbox">
+                            <input id="input-critical" type="checkbox" data-toggle="toggle" @(Model.IsCritical?"checked":"")>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-left: 20%;">
+                    <div class="ms-1 me-0">
+                        <button type="button" id="submit-critical" class="btn btn-primary text-start" style="width: 100%" disabled>
+                            <i class="bi bi-arrow-clockwise"></i> &nbsp; <span id="submit-critical-text">Apply critical edit</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="margin-left: 50%;">
+            <div class="ms-1 me-0">
+                <h4>Role Default</h4>
+                <div style="width: 20%; float: left;">
+                    <div class="ms-0 me-1">
+                        <div class="checkbox">
+                            <input id="input-default" type="checkbox" data-toggle="toggle" @(Model.IsDefault?"checked":"")>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-left: 20%; ">
+                    <div class="ms-1 me-0">
+                        <button type="button" id="submit-default" class="btn btn-primary text-start" style="width: 100%" disabled>
+                            <i class="bi bi-arrow-clockwise"></i> &nbsp; <span id="submit-default-text">Apply default edit</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row pt-4">
+    <div class="col-md-6">
+        <div style="width: 50%; float: left;">
+            <div class="ms-0 me-1">
+                <h4>Created At</h4>
+                <div class="form-outline">
+                    <input type="text" id="input-created-at" class="form-control" spellcheck="false" placeholder="..." value="@Model.CreatedAt" readonly/>
+                </div>
+            </div>
+        </div>
+        <div style="margin-left: 50%;">
+            <div class="ms-1 me-0">
+                <h4>Last Modified At</h4>
+                <div class="form-outline">
+                    <input type="text" id="input-last-modified-at" class="form-control" spellcheck="false" placeholder="..." value="@Model.LastModifiedAt" readonly/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+<div class="row pt-4">
+    <div class="col-md-6">
+        <div class="w-100 btn-group" role="group">
+            <a type="button" asp-area="Roles" asp-controller="Administrator" asp-action="ManageRoleUsers" asp-route-roleId="@Model.RoleId"
+                class="btn btn-primary rounded text-start" style="width: 200px">
+                <i class="bi bi-gear"></i> &nbsp; Manage Users
+            </a>
+            <a type="button" asp-area="Roles" asp-controller="Administrator" asp-action="ManageRolePermissions" asp-route-roleId="@Model.RoleId"
+                class="btn btn-primary rounded ms-2 me-0 text-start" style="width: 200px">
+                <i class="bi bi-gear"></i> &nbsp; Manage Permissions
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row pt-4">
+    <div class="col-md-6">
+        <div class="w-100 btn-group" role="group">
+            <button type="button" id="submit-delete" class="btn btn-danger rounded text-start" style="width: 200px">
+                <i class="bi bi-trash"></i> &nbsp; Delete Role
+            </button>
+            <a type="button" asp-area="Roles" asp-controller="Administrator" asp-action="ManageRoles" asp-route-Highlighted="@Model.RoleId"
+                class="btn btn-primary rounded ms-2 me-0 text-start" style="width: 200px">
+                <i class="bi bi-caret-left"></i> &nbsp; Back to overview
+            </a>
+        </div>
+    </div>
+</div>
+<br />
+
+<partial name="_MFAPromptPartial"></partial>
+
+@section PartialScripts {
+    <!-- mfa script -->
+    <script src="~/js/_mfa.js" asp-append-version="true"></script>
+    <!-- end mfa script -->
+}
+
+@section Scripts {
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+    <script>
+
+        $(document).ready(function() {
+            var permissionId = "@Model.RoleId";
+
+            var original_role_name = "@Model.Name";
+            var input_role_name = document.getElementById("input-name");
+            var submit_role_name = document.getElementById("submit-name");
+            var submit_role_name_text = document.getElementById("submit-name-text");
+
+            var original_role_critical = @(Model.IsCritical?"true":"false");
+            var input_role_critical = document.getElementById("input-critical");
+            var submit_role_critical = document.getElementById("submit-critical");
+            var submit_role_critical_text = document.getElementById("submit-critical-text");
+
+            var original_role_default = @(Model.IsDefault?"true":"false");
+            var input_role_default = document.getElementById("input-default");
+            var submit_role_default = document.getElementById("submit-default");
+            var submit_role_default_text = document.getElementById("submit-default-text");
+
+            var submit_delete = document.getElementById("submit-delete");
+
+            input_role_name.oninput = (data) => {
+                submit_role_name.disabled = (data.target.value == "" || data.target.value == original_role_name);
+                
+                if (!submit_role_name.disabled && data.target.value == " ") {
+                    data.target.value = original_role_name;
+                }
+            }
+
+            input_role_critical.onchange = (data) => {
+                submit_role_critical.disabled = (data.target.checked == original_role_critical);    
+            }
+
+            input_role_default.onchange = (data) => {
+
+                submit_role_default.disabled = (data.target.checked == original_role_default);
+                
+            }
+
+            submit_role_name.onclick = async (data) => {
+                await advancedPost(
+                    "editname/",
+                    {
+                        "Name": input_role_name.value
+                    },
+                    {
+                        "onSuccess": async (data) => {
+                            original_role_name = input_role_name.value;
+                            input_role_name.value = "";
+                            input_role_name.placeholder = original_role_name;
+                            submit_role_name.disabled = true;
+                        }
+                    }
+                );
+            }
+
+
+            submit_role_critical.onclick = async (data) => { 
+                await advancedPost(
+                    "togglecritical/",
+                    {},
+                    {
+                        "mfa": true,
+                        "onSuccess": async (data) => {
+                            original_role_critical = !original_role_critical;
+                            submit_role_critical.disabled = true;
+                        }
+                    }
+                    true
+                );
+            }
+
+            submit_role_default.onclick = async (data) => {
+                await advancedPost(
+                    "toggledefault/",
+                    {},
+                    {
+                        "onSuccess": async (data) => {
+                            original_role_default = !original_role_default;
+                            submit_role_default.disabled = true;
+                        }
+                    }
+                );
+            }
+
+
+
+            submit_delete.onclick = async (data) => { 
+                await advancedPost(
+                    "delete/",
+                    {},
+                    {
+                        "mfa": true
+                    }
+                )
+            }
+        });
+    </script>
+}

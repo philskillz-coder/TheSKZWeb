@@ -1,0 +1,88 @@
+﻿@{
+    ViewData["Title"] = "Create Role";
+}
+
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+
+
+<div class="border p-3 mt4">
+    <div class="row pb-2">
+        <h2 class="text-primary">
+            Create Role
+        </h2>
+        <br />
+    </div>
+</div>
+
+
+<div class="row pt-4">
+    <h4>Role Name</h4>
+    <div class="col-md-6">
+        <div class="form-outline">
+            <input type="text" id="input-name" class="form-control" pattern=".{3,21}" title="Role Name" spellcheck="false" placeholder="..."/>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row pt-4">
+    <div class="col-md-6">
+        <div style="width: 50%; float: left;">
+            <div class="ms-0 me-1">
+                <h4>Critical</h4>
+                <div class="checkbox">
+                    <input id="input-critical" type="checkbox" data-toggle="toggle">
+                </div>
+            </div>
+        </div>
+        <div style="margin-left: 50%;">
+            <div class="ms-1 me-0">
+                <h4>Default</h4>
+                <div class="checkbox">
+                    <input id="input-default" type="checkbox" data-toggle="toggle">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+
+<div class="row pt-4">
+    <div class="col-md-6">
+        <div class="w-100 btn-group" role="group">
+            <button type="button" id="submit-create" class="btn btn-success rounded text-start" style="width: 200px">
+                <i class="bi bi-check-square"></i> &nbsp; Create Role
+            </button>
+            <a type="button" asp-area="Roles" asp-controller="Administrator" asp-action="ManageRoles"
+                class="btn btn-primary rounded ms-2 me-0 text-start" style="width: 200px">
+                <i class="bi bi-caret-left"></i> &nbsp; Back to overview
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var input_role_name = document.getElementById("input-name");
+            var input_role_critical = document.getElementById("input-critical");
+            var input_role_default = document.getElementById("input-default");
+            var submit_create = document.getElementById("submit-create");
+
+            submit_create.onclick = async (btndata) => { 
+                await advancedPost(
+                    "",
+                    {
+                        "Name": input_role_name.value,
+                        "Critical": input_role_critical.checked,
+                        "Default": input_role_default.checked
+                    }
+                )
+            }
+        });
+    </script>
+}

@@ -1,0 +1,37 @@
+﻿var identity = await GetIdentity();
+var identityHId = _userService.GetUserHashId(identity.Id);
+if (request.mfaCode == null)
+{
+    return Ok(
+        new
+        {
+            Message = "2FA Validation required",
+            For = "",
+            Type = "Error",
+            Data = new
+            {
+                UserIdentifier = identityHId
+            },
+            Tags = new string[]
+            {
+                ResponseTags.DO_MFA
+            }
+        }
+    );
+}
+
+if (!_mfaService.ValidateMFARequest(identityHId, request.mfaCode))
+{
+    return Ok(
+        new
+        {
+            Message = "2FA Validation failed",
+            For = "",
+            Type = "Error",
+            Data = new
+            {
+                UserIdentifier = identityHId
+            }
+        }
+    );
+}

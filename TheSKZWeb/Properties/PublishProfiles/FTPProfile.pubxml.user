@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Diese Datei wird vom Veröffentlichungs-/Paketierungsprozess Ihres Webprojekts verwendet. Sie können das Verhalten dieses Prozesses anpassen,
+indem Sie diese MSBuild-Datei bearbeiten. Weitere Informationen hierzu finden Sie unter https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAWCwSJzYYIkWBMqitP/tKVQAAAAACAAAAAAAQZgAAAAEAACAAAAC3/EeeR+ygDmYS4JU9A/2Qf2Da7a5qmtafnKKsmvtc/QAAAAAOgAAAAAIAACAAAADyPaZaN2QLPgyTDZ7bNhWl631E0i8467gfoLCNBPrZ5BABAABCHlr5qQwPrIJVs9zPAvDnPtwj9B2IsRQBocSePFXh0LSAa5/UrcYvhCdOzhyXp8Q3W/u40KIz+YZPvMpmAJLE9rGgpI/29dUlmXeoWsLm1s63hdJvrY1QbbbGbsiCcQKZoKR9LUMot+bk89+cfL09kpQYMxPNu2E9xWu+02QcSUb5c7S0zQ2t3i6LPMl5bmXsrgI1uCRnll4XY1DVBTuteHxqhT+4zo0S206+tvezhJcBV3oqBF0IOqTdwUQi2cBZha6OWt79LiYe8IM8oDAQvaRtTjS1NXh5XE8aDBVcWeKZ9GtO8kTUeGhGEtsJUzW0vZx9CitohJBCfX8YcNmF9cOTJtOIoI5bGKg4THqMkkAAAAAt1fkMX0hM3s097VgLs8Pz+jRullkDPsvMbawvznXIVdcNEScLt3wYyFBMbYFZxN4eBsSbD2n0NDjBTg3K2dqM</EncryptedPassword>
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="pg-main">
+      <Value>Server=theskz.dev%3bDatabase=theskz_web_db%3bPort=5432%3bUser Id=theskz_web%3bPassword=PEf1QXHRd13qNhCJv2NSifI3nhJe5iKSntVcPDkoHgtZ7L5R4QlPnK6QxQIkOyjr%3b</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+  <ItemGroup>
+    <EFMigrations Include="TheSKZWeb.WebDataContextMain">
+      <Value>Server=theskz.dev%3bDatabase=theskz_web_db%3bPort=5432%3bUser Id=theskz_web%3bPassword=PEf1QXHRd13qNhCJv2NSifI3nhJe5iKSntVcPDkoHgtZ7L5R4QlPnK6QxQIkOyjr%3b</Value>
+    </EFMigrations>
+  </ItemGroup>
+</Project>

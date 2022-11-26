@@ -1,0 +1,42 @@
+﻿@using TheSKZWeb.Areas.Users.Models.Home.Out
+@model Out_AmILoggedIn
+
+@{
+    ViewData["Title"] = (Model.IsLoggedIn ? "Angemeldet" : "Nicht Angemeldet");
+}
+
+<style>
+    .center {
+        right: 50%;
+        bottom: 50%;
+        transform: translate(50%,50%);
+        position: absolute;
+        text-align: center;
+    }
+    .center2 {
+        right: 50%;
+        bottom: 45%;
+        transform: translate(45%,45%);
+        position: absolute;
+        text-align: center;
+    }
+</style>
+
+<h3 class="center">
+    Du bist
+</h3>
+
+@{
+    if (Model.IsLoggedIn)
+    {
+    <h3 class="center2" style="color: #89cff0">
+        Angemeldet
+    </h3>
+    } else
+    {
+    <h3 class="center2" style="color: #A9A9A9">
+        Nicht Angemeldet
+    </h3>
+    }
+}
+    
