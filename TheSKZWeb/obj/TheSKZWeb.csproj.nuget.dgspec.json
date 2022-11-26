@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Documents\\TheSKZWeb\\TheSKZWeb\\TheSKZWeb.csproj": {}
+    "C:\\Users\\Philskillz\\Documents\\GitHub\\TheSKZWeb\\TheSKZWeb\\TheSKZWeb.csproj": {}
   },
   "projects": {
-    "E:\\Documents\\TheSKZWeb\\TheSKZWeb\\TheSKZWeb.csproj": {
+    "C:\\Users\\Philskillz\\Documents\\GitHub\\TheSKZWeb\\TheSKZWeb\\TheSKZWeb.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Documents\\TheSKZWeb\\TheSKZWeb\\TheSKZWeb.csproj",
+        "projectUniqueName": "C:\\Users\\Philskillz\\Documents\\GitHub\\TheSKZWeb\\TheSKZWeb\\TheSKZWeb.csproj",
         "projectName": "TheSKZWeb",
-        "projectPath": "E:\\Documents\\TheSKZWeb\\TheSKZWeb\\TheSKZWeb.csproj",
+        "projectPath": "C:\\Users\\Philskillz\\Documents\\GitHub\\TheSKZWeb\\TheSKZWeb\\TheSKZWeb.csproj",
         "packagesPath": "C:\\Users\\Philskillz\\.nuget\\packages\\",
-        "outputPath": "E:\\Documents\\TheSKZWeb\\TheSKZWeb\\obj\\",
+        "outputPath": "C:\\Users\\Philskillz\\Documents\\GitHub\\TheSKZWeb\\TheSKZWeb\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
