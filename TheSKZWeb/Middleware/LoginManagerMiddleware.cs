@@ -17,11 +17,11 @@ namespace TheSKZWeb.Middleware
 
         public async Task InvokeAsync(HttpContext context, IUserService userService, IPermissionsService permissionsService)
         {
-            // skz!
-            //User? user = await GetIdentity(context, userService);
-            //if (user != null && !await userService.HasPermission(user, p => permissionsService.GetPermissionHashId(p.Id), ServicePermissions.Users_Home_Login)) {
-            //    await context.SignOutAsync();
-            //}
+            User? user = await GetIdentity(context, userService);
+            if (user != null && !await userService.HasPermission(user, p => permissionsService.GetPermissionHashId(p.Id), PagePermissions.Users_Home_Login))
+            {
+                await context.SignOutAsync();
+            }
 
             // Call the next delegate/middleware in the pipeline.
             await _next(context);

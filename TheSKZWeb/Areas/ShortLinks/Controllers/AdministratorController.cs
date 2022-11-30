@@ -8,8 +8,8 @@ namespace TheSKZWeb.Areas.ShortLinks.Controllers
     [NonController]
     [Area("ShortLinks")]
     [Permission(
-        ServicePermissions.ShortLinks,
-        ServicePermissions.ShortLinks_Administrator
+        PagePermissions.ShortLinks,
+        PagePermissions.ShortLinks_Administrator
     )]
     public class AdministratorController : NewController
     {

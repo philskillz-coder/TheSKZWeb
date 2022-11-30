@@ -14,8 +14,8 @@ namespace TheSKZWeb.Areas.Permissions.Controllers
 {
     [Area("Users")]
     [Permission(
-        ServicePermissions.Users,
-        ServicePermissions.Users_Home
+        PagePermissions.Users,
+        PagePermissions.Users_Home
     )]
     public class HomeController : NewController
     {
@@ -153,57 +153,56 @@ namespace TheSKZWeb.Areas.Permissions.Controllers
                 );
             }
 
-            // skz!
-            //if (!await _userService.HasPermission(toLogIn, p => _permissionsService.GetPermissionHashId(p.Id), ServicePermissions.Users_Home_Login))
-            //{
-            //    return Ok(
-            //        new
-            //        {
-            //            Message = "You are not allowed to login!",
-            //            For = "Login",
-            //            Type = "Error"
-            //        }
-            //    );
-            //}
-
-            if (await _userService.HasCriticalRole(toLogIn) || await _userService.HasCriticalPermission(toLogIn))
+            if (!await _userService.HasPermission(toLogIn, p => _permissionsService.GetPermissionHashId(p.Id), PagePermissions.Users_Home_Login))
             {
-                if (request.mfaCode == null)
-                {
-                    return Ok(
-                        new
-                        {
-                            Message = "2FA Validation required",
-                            For = "Login",
-                            Type = "Error",
-                            Data = new
-                            {
-                                UserIdentifier = "@" + toLogIn.Username
-                            },
-                            Tags = new string[]
-                            {
-                            ResponseTags.DO_MFA
-                            }
-                        }
-                    );
-                }
-
-                if (!_mfaService.ValidateMFARequest(_userService.GetUserHashId(toLogIn.Id), request.mfaCode))
-                {
-                    return Ok(
-                        new
-                        {
-                            Message = "2FA Validation failed",
-                            For = "Login",
-                            Type = "Error",
-                            Data = new
-                            {
-                                UserIdentifier = "@" + toLogIn.Username
-                            }
-                        }
-                    );
-                }
+                return Ok(
+                    new
+                    {
+                        Message = "You are not allowed to login!",
+                        For = "Login",
+                        Type = "Error"
+                    }
+                );
             }
+
+            //if (await _userService.HasCriticalRole(toLogIn) || await _userService.HasCriticalPermission(toLogIn))
+            //{
+            //    if (request.mfaCode == null)
+            //    {
+            //        return Ok(
+            //            new
+            //            {
+            //                Message = "2FA Validation required",
+            //                For = "Login",
+            //                Type = "Error",
+            //                Data = new
+            //                {
+            //                    UserIdentifier = "@" + toLogIn.Username
+            //                },
+            //                Tags = new string[]
+            //                {
+            //                ResponseTags.DO_MFA
+            //                }
+            //            }
+            //        );
+            //    }
+
+            //    if (!_mfaService.ValidateMFARequest(_userService.GetUserHashId(toLogIn.Id), request.mfaCode))
+            //    {
+            //        return Ok(
+            //            new
+            //            {
+            //                Message = "2FA Validation failed",
+            //                For = "Login",
+            //                Type = "Error",
+            //                Data = new
+            //                {
+            //                    UserIdentifier = "@" + toLogIn.Username
+            //                }
+            //            }
+            //        );
+            //    }
+            //}
 
             await HttpContext.SignInAsync(
             CookieAuthenticationDefaults.AuthenticationScheme,
@@ -268,7 +267,7 @@ namespace TheSKZWeb.Areas.Permissions.Controllers
 
         [HttpGet("/users/me")]
         [Permission(
-            ServicePermissions.Users_Home_Me
+            PagePermissions.Users_Home_Me
         )]
         public async Task<IActionResult> Me(
         )

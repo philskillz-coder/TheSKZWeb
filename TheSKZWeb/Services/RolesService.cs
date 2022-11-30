@@ -16,7 +16,7 @@ namespace TheSKZWeb.Services
         IQueryable<Role> GetRolesByName(string[] names);
 
         IQueryable<Role> GetDefaultRoles();
-        Task<Role> CreateRole(string name, bool isCritical, bool isDefault);
+        Task<Role> CreateRole(string name, bool isDefault);
         Task<bool> RoleNameExists(string name);
 
         string GetRoleHashId(int roleId);
@@ -68,12 +68,11 @@ namespace TheSKZWeb.Services
             return _db.Roles;
         }
 
-        public async Task<Role> CreateRole(string name, bool isCritical, bool isDefault)
+        public async Task<Role> CreateRole(string name, bool isDefault)
         {
             Role createdRole = new Role
             {
                 Name = name,
-                IsCritical = isCritical,
                 IsDefault = isDefault,
                 CreatedAt = DateTime.UtcNow
             };

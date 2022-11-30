@@ -33,9 +33,6 @@ namespace TheSKZWeb.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("IsCritical")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("IsDefault")
                         .HasColumnType("boolean");
 
@@ -46,12 +43,7 @@ namespace TheSKZWeb.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("ParentId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ParentId");
 
                     b.ToTable("Permissions");
                 });
@@ -66,9 +58,6 @@ namespace TheSKZWeb.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsCritical")
-                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsDefault")
                         .HasColumnType("boolean");
@@ -160,6 +149,9 @@ namespace TheSKZWeb.Migrations
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("MFAEnabled")
+                        .HasColumnType("boolean");
+
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("bytea");
@@ -235,15 +227,6 @@ namespace TheSKZWeb.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRoles");
-                });
-
-            modelBuilder.Entity("TheSKZWeb.Models.Permission", b =>
-                {
-                    b.HasOne("TheSKZWeb.Models.Permission", "Parent")
-                        .WithMany()
-                        .HasForeignKey("ParentId");
-
-                    b.Navigation("Parent");
                 });
 
             modelBuilder.Entity("TheSKZWeb.Models.RolePermission", b =>

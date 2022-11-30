@@ -52,9 +52,6 @@
                 ID
             </th>
             <th>
-                Critical
-            </th>
-            <th>
                 Default
             </th>
             <th>
@@ -72,15 +69,8 @@
                 <td class="td_center" width="10%">
                     <span class="copyText" style="color: #DE3394" data-name="Permission Id" data-copydata="@Model.Highlighted.PermissionId" data-doalert="true" data-generate="true"></span>
                 </td>
-                <td class="@(Model.Highlighted.IsCritical?"table-danger":"") td_center" width="10%">
-                    @{
-                        if (Model.Highlighted.IsCritical) {
-                                <i class="bi bi-check" title="Critical Permission"></i>
-                        } else
-                        {
-                                <i class="bi bi-x" title="Non-Critical Permission"></i>
-                        }
-                    }
+                <td class="td_center" width="10%">
+                    <i class="bi bi-x" title="Non-Critical Permission"></i>
                 </td>
                 <td class="@(Model.Highlighted.IsDefault?"table-warning":"") td_center" width="10%">
                     @{
@@ -113,15 +103,8 @@
                 <td class="@(permission.Highlighted? "table-success" : "") td_center" width="10%">
                     <span class="copyText" style="color: #DE3394" data-name="Permission Id" data-copydata="@permission.PermissionId" data-doalert="true" data-generate="true"></span>
                 </td>
-                <td class="@(permission.IsCritical?"table-danger":"") td_center" width="10%">
-                    @{
-                        if (permission.IsCritical) {
-                                <i class="bi bi-check" title="Critical Permission"></i>
-                        } else
-                        {
-                                <i class="bi bi-x" title="Non-Critical Permission"></i>
-                        }
-                    }
+                <td class="td_center" width="10%">
+                    <i class="bi bi-x" title="Non-Critical Permission"></i>
                 </td>
                 <td class="@(permission.IsDefault?"table-warning":"") td_center" width="10%">
                     @{

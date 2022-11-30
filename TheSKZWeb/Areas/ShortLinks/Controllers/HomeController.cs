@@ -8,8 +8,8 @@ namespace TheSKZWeb.Areas.ShortLinks.Controllers
 {
     [Area("ShortLinks")]
     [Permission(
-        ServicePermissions.ShortLinks,
-        ServicePermissions.ShortLinks_Home
+        PagePermissions.ShortLinks,
+        PagePermissions.ShortLinks_Home
     )]
     public class HomeController : NewController
     {

@@ -13,8 +13,8 @@ namespace TheSKZWeb.Areas.Users.Controllers
 {
     [Area("Users")]
     [Permission(
-        ServicePermissions.Users,
-        ServicePermissions.Users_Administrator
+        PagePermissions.Users,
+        PagePermissions.Users_Administrator
     )]
     public class AdministratorController : NewController
     {
@@ -47,7 +47,7 @@ namespace TheSKZWeb.Areas.Users.Controllers
                     UserId = _userService.GetUserHashId(user.Id),
                     Username = user.Username,
                     Highlighted = user.Id == highlightedUser?.Id,
-                    CriticalPerms = await _userService.HasCriticalPermission(user)
+                    MFAEnabled = user.MFAEnabled
                 });
             }
 
@@ -59,8 +59,7 @@ namespace TheSKZWeb.Areas.Users.Controllers
                     {
                         UserId = _userService.GetUserHashId(highlightedUser.Id),
                         Username = highlightedUser.Username,
-                        Highlighted = true,
-                        CriticalPerms = await _userService.HasCriticalPermission(highlightedUser)
+                        Highlighted = true
                     } : null
                 }
             );
@@ -69,7 +68,7 @@ namespace TheSKZWeb.Areas.Users.Controllers
 
         [HttpGet("/administrator/users/{userId}")]
         [Permission(
-            ServicePermissions.Users_Administrator_User
+            PagePermissions.Users_Administrator_User
         )]
         public async Task<IActionResult> ManageUser(
             [FromRoute] In_PartialUserIdentifier userIdentifier
@@ -97,6 +96,7 @@ namespace TheSKZWeb.Areas.Users.Controllers
                 {
                     UserId = _userService.GetUserHashId(user.Id),
                     Username = user.Username,
+                    MFAEnabled = user.MFAEnabled,
                     CreatedAt = user.CreatedAt,
                     LastModifiedAt = user.LastModifiedAt
                 }
@@ -105,8 +105,8 @@ namespace TheSKZWeb.Areas.Users.Controllers
 
         [HttpPost("/administrator/users/{userId}/editusername")]
         [Permission(
-            ServicePermissions.Users_Administrator_User,
-            ServicePermissions.Users_Administrator_User_Name
+            PagePermissions.Users_Administrator_User,
+            PagePermissions.Users_Administrator_User_Name
         )]
         public async Task<IActionResult> ManageUserUsername(
             [FromRoute] In_PartialUserIdentifier userIdentifier,
@@ -179,8 +179,8 @@ namespace TheSKZWeb.Areas.Users.Controllers
         // allways 2fa
         [HttpPost("/administrator/users/{userId}/deleteuser")]
         [Permission(
-            ServicePermissions.Users_Administrator_User,
-            ServicePermissions.Users_Administrator_User_Delete
+            PagePermissions.Users_Administrator_User,
+            PagePermissions.Users_Administrator_User_Delete
         )]
         public async Task<IActionResult> ManageUserDelete(
             [FromRoute] In_PartialUserIdentifier userIdentifier,
@@ -276,8 +276,8 @@ namespace TheSKZWeb.Areas.Users.Controllers
 
         [HttpGet("/administrator/users/{userId}/permissions")]
         [Permission(
-            ServicePermissions.Users_Administrator_User,
-            ServicePermissions.Users_Administrator_User_Permissions
+            PagePermissions.Users_Administrator_User,
+            PagePermissions.Users_Administrator_User_Permissions
         )]
         public async Task<IActionResult> ManageUserPermissions(
             [FromRoute] In_PartialUserIdentifier userIdentifier
@@ -320,12 +320,11 @@ namespace TheSKZWeb.Areas.Users.Controllers
         }
 
 
-        // 2fa if critical
         [HttpPost("/administrator/users/{userId}/permissions/grant")]
         [Permission(
-            ServicePermissions.Users_Administrator_User,
-            ServicePermissions.Users_Administrator_User_Permissions,
-            ServicePermissions.Users_Administrator_User_Permissions_Grant
+            PagePermissions.Users_Administrator_User,
+            PagePermissions.Users_Administrator_User_Permissions,
+            PagePermissions.Users_Administrator_User_Permissions_Grant
         )]
         public async Task<IActionResult> ManageUserPermissionsGrant(
             [FromRoute] In_PartialUserIdentifier userIdentifier,
@@ -385,46 +384,6 @@ namespace TheSKZWeb.Areas.Users.Controllers
                 return BadRequest();
             }
 
-            if (permission.IsCritical)
-            {
-                var identityHId = _userService.GetUserHashId(identity.Id);
-                if (request.mfaCode == null)
-                {
-                    return Ok(
-                        new
-                        {
-                            Message = "2FA Validation required",
-                            For = "Manage User Permissions Grant",
-                            Type = "Error",
-                            Data = new
-                            {
-                                UserIdentifier = identityHId
-                            },
-                            Tags = new string[]
-                            {
-                                ResponseTags.DO_MFA
-                            }
-                        }
-                    );
-                }
-
-                if (!_mfaService.ValidateMFARequest(identityHId, request.mfaCode))
-                {
-                    return Ok(
-                        new
-                        {
-                            Message = "2FA Validation failed",
-                            For = "Manage User Permissions Grant",
-                            Type = "Error",
-                            Data = new
-                            {
-                                UserIdentifier = identityHId
-                            }
-                        }
-                    );
-                }
-            }
-
             if (!await _userService.HasPermission(
                 identity,
                 p => p,
@@ -464,12 +423,11 @@ namespace TheSKZWeb.Areas.Users.Controllers
             );
         }
 
-        // 2fa if critical
         [HttpPost("/administrator/users/{userId}/permissions/revoke")]
         [Permission(
-            ServicePermissions.Users_Administrator_User,
-            ServicePermissions.Users_Administrator_User_Permissions,
-            ServicePermissions.Users_Administrator_User_Permissions_Revoke
+            PagePermissions.Users_Administrator_User,
+            PagePermissions.Users_Administrator_User_Permissions,
+            PagePermissions.Users_Administrator_User_Permissions_Revoke
         )]
         public async Task<IActionResult> ManageUserPermissionsRevoke(
             [FromRoute] In_PartialUserIdentifier userIdentifier,
@@ -530,46 +488,6 @@ namespace TheSKZWeb.Areas.Users.Controllers
                 return BadRequest();
             }
 
-            if (permission.IsCritical)
-            {
-                var identityHId = _userService.GetUserHashId(identity.Id);
-                if (request.mfaCode == null)
-                {
-                    return Ok(
-                        new
-                        {
-                            Message = "2FA Validation required",
-                            For = "Manage User Permissions Revoke",
-                            Type = "Error",
-                            Data = new
-                            {
-                                UserIdentifier = identityHId
-                            },
-                            Tags = new string[]
-                            {
-                ResponseTags.DO_MFA
-                            }
-                        }
-                    );
-                }
-
-                if (!_mfaService.ValidateMFARequest(identityHId, request.mfaCode))
-                {
-                    return Ok(
-                        new
-                        {
-                            Message = "2FA Validation failed",
-                            For = "Manage User Permissions Revoke",
-                            Type = "Error",
-                            Data = new
-                            {
-                                UserIdentifier = identityHId
-                            }
-                        }
-                    );
-                }
-            }
-
             if (!await _userService.HasPermission(
                 identity,
                 p => p,
@@ -612,8 +530,8 @@ namespace TheSKZWeb.Areas.Users.Controllers
 
         [HttpGet("/administrator/users/{userId}/roles")]
         [Permission(
-            ServicePermissions.Users_Administrator_User,
-            ServicePermissions.Users_Administrator_User_Roles
+            PagePermissions.Users_Administrator_User,
+            PagePermissions.Users_Administrator_User_Roles
         )]
         public async Task<IActionResult> ManageUserRoles(
             [FromRoute] In_PartialUserIdentifier userIdentifier
@@ -655,12 +573,11 @@ namespace TheSKZWeb.Areas.Users.Controllers
             );
         }
 
-        // 2fa if critical
         [HttpPost("/administrator/users/{userId}/roles/grant")]
         [Permission(
-            ServicePermissions.Users_Administrator_User,
-            ServicePermissions.Users_Administrator_User_Roles,
-            ServicePermissions.Users_Administrator_User_Roles_Grant
+            PagePermissions.Users_Administrator_User,
+            PagePermissions.Users_Administrator_User_Roles,
+            PagePermissions.Users_Administrator_User_Roles_Grant
         )]
         public async Task<IActionResult> ManageUserRolesGrant(
             [FromRoute] In_PartialUserIdentifier userIdentifier,
@@ -720,45 +637,7 @@ namespace TheSKZWeb.Areas.Users.Controllers
                 return BadRequest();
             }
 
-            if (role.IsCritical)
-            {
-                var identityHId = _userService.GetUserHashId(identity.Id);
-                if (request.mfaCode == null)
-                {
-                    return Ok(
-                        new
-                        {
-                            Message = "2FA Validation required",
-                            For = "Manage User Roles Grant",
-                            Type = "Error",
-                            Data = new
-                            {
-                                UserIdentifier = identityHId
-                            },
-                            Tags = new string[]
-                            {
-                ResponseTags.DO_MFA
-                            }
-                        }
-                    );
-                }
 
-                if (!_mfaService.ValidateMFARequest(identityHId, request.mfaCode))
-                {
-                    return Ok(
-                        new
-                        {
-                            Message = "2FA Validation failed",
-                            For = "Manage User Roles Grant",
-                            Type = "Error",
-                            Data = new
-                            {
-                                UserIdentifier = identityHId
-                            }
-                        }
-                    );
-                }
-            }
 
             if (!await _userService.HasRole(
                 identity,
@@ -798,12 +677,11 @@ namespace TheSKZWeb.Areas.Users.Controllers
             );
         }
 
-        // 2fa if critical
         [HttpPost("/administrator/users/{userId}/roles/revoke")]
         [Permission(
-            ServicePermissions.Users_Administrator_User,
-            ServicePermissions.Users_Administrator_User_Roles,
-            ServicePermissions.Users_Administrator_User_Roles_Revoke
+            PagePermissions.Users_Administrator_User,
+            PagePermissions.Users_Administrator_User_Roles,
+            PagePermissions.Users_Administrator_User_Roles_Revoke
         )]
         public async Task<IActionResult> ManageUserRolesRevoke(
             [FromRoute] In_PartialUserIdentifier userIdentifier,
@@ -864,45 +742,7 @@ namespace TheSKZWeb.Areas.Users.Controllers
                 return BadRequest();
             }
 
-            if (role.IsCritical)
-            {
-                var identityHId = _userService.GetUserHashId(identity.Id);
-                if (request.mfaCode == null)
-                {
-                    return Ok(
-                        new
-                        {
-                            Message = "2FA Validation required",
-                            For = "Manage User Roles Revoke",
-                            Type = "Error",
-                            Data = new
-                            {
-                                UserIdentifier = identityHId
-                            },
-                            Tags = new string[]
-                            {
-                ResponseTags.DO_MFA
-                            }
-                        }
-                    );
-                }
 
-                if (!_mfaService.ValidateMFARequest(identityHId, request.mfaCode))
-                {
-                    return Ok(
-                        new
-                        {
-                            Message = "2FA Validation failed",
-                            For = "Manage User Roles Revoke",
-                            Type = "Error",
-                            Data = new
-                            {
-                                UserIdentifier = identityHId
-                            }
-                        }
-                    );
-                }
-            }
 
             if (!await _userService.HasRole(
                 identity,

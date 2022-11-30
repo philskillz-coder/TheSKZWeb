@@ -72,15 +72,8 @@
                 <td class="td_center" width="10%">
                     <span class="copyText" style="color: #DE3394" data-name="Role Id" data-copydata="@Model.Highlighted.RoleId" data-doalert="true" data-generate="true"></span>
                 </td>
-                <td class="@(Model.Highlighted.IsCritical?"table-danger":"") td_center" width="10%">
-                    @{
-                        if (Model.Highlighted.IsCritical) {
-                                <i class="bi bi-check" title="Critical Role"></i>
-                        } else
-                        {
-                                <i class="bi bi-x" title="Non-Critical Role"></i>
-                        }
-                    }
+                <td class="td_center" width="10%">
+                     <i class="bi bi-x" title="Non-Critical Role"></i>
                 </td>
                 <td class="@(Model.Highlighted.IsDefault?"table-warning":"") td_center" width="10%">
                     @{
@@ -113,15 +106,8 @@
                 <td class="@(role.Highlighted? "table-success" : "") td_center" width="10%">
                     <span class="copyText" style="color: #DE3394" data-name="Role Id" data-copydata="@role.RoleId" data-doalert="true" data-generate="true"></span>
                 </td>
-                <td class="@(role.IsCritical?"table-danger":"") td_center" width="10%">
-                    @{
-                        if (role.IsCritical) {
-                                <i class="bi bi-check" title="Critical Role"></i>
-                        } else
-                        {
-                                <i class="bi bi-x" title="Non-Critical Role"></i>
-                        }
-                    }
+                <td class="td_center" width="10%">
+                    <i class="bi bi-x" title="Non-Critical Role"></i>
                 </td>
                 <td class="@(role.IsDefault?"table-warning":"") td_center" width="10%">
                     @{

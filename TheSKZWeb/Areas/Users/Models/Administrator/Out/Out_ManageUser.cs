@@ -4,6 +4,7 @@
     {
         public string UserId { get; set; }
         public string Username { get; set; }
+        public bool MFAEnabled { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? LastModifiedAt { get; set; }
         

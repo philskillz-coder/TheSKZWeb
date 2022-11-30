@@ -4,7 +4,6 @@ public class _Permission
 {
     public string PermissionId { get; set; }
     public bool IsDefault { get; set; }
-    public bool IsCritical { get; set; }
     public string Name { get; set; }
     public bool Highlighted { get; set; }
 }

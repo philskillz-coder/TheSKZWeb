@@ -6,10 +6,8 @@ namespace TheSKZWeb.Models;
 public class Permission
 {
     [Key] public int Id { get; set; }
-    public Permission? Parent { get; set; }
 
     [Required] public bool IsDefault { get; set; }
-    [Required] public bool IsCritical { get; set; }
 
 
     //[Index(IsUnique = true)]
@@ -26,7 +24,6 @@ public class Role
     [Key] public int Id { get; set; }
 
     [Required] public bool IsDefault { get; set; }
-    [Required] public bool IsCritical { get; set; }
 
     [Required] public string Name { get; set; }
 
@@ -55,7 +52,9 @@ public class User
 
     [Required] public byte[] RecoveryTokenHash { get; set; }
     [Required] public byte[] RecoveryTokenSalt { get; set; }
-    
+
+    [Required] public bool MFAEnabled { get; set; } = false;
+
     [Required] public DateTime CreatedAt { get; set; }
     public DateTime? LastModifiedAt { get; set; }
 }

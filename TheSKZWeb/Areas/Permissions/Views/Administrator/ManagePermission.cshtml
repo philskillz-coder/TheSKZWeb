@@ -42,20 +42,6 @@
 </div>
 
 <div class="row pt-4">
-    <h4>Permission Parent</h4>
-    <div class="col-md-6">
-        <div class="form-outline">
-            <input type="text" id="input-parent" class="form-control" pattern=".{3,21}" title="Permission Parent" spellcheck="false" placeholder="@Model.Parent"/>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <button type="button" id="submit-parent" class="btn btn-primary text-start" style="width: 280px" disabled>
-            <i class="bi bi-arrow-clockwise"></i> &nbsp; <span id="submit-parent-text">Apply parent edit</span>
-        </button>
-    </div>
-</div>
-
-<div class="row pt-4">
     <div class="col-md-6">
         <div style="width: 50%; float: left;">
             <div class="ms-0 me-1">
@@ -63,7 +49,7 @@
                 <div style="width: 20%; float: left;">
                     <div class="ms-0 me-1">
                         <div class="checkbox">
-                            <input id="input-critical" type="checkbox" data-toggle="toggle" @(Model.IsCritical?"checked":"")>
+                            <input id="input-critical" type="checkbox" data-toggle="toggle">
                         </div>
                     </div>
                 </div>
@@ -164,12 +150,7 @@
             var submit_permission_name = document.getElementById("submit-name");
             var submit_permission_text = document.getElementById("submit-name-text");
 
-            var original_permission_parent = "@Model.Parent";
-            var input_permission_parent = document.getElementById("input-parent");
-            var submit_permission_parent = document.getElementById("submit-parent");
-            var submit_permission_parent_text = document.getElementById("submit-parent-text");
-
-            var original_permission_critical = @(Model.IsCritical?"true":"false");
+            var original_permission_critical = false;
             var input_permission_critical = document.getElementById("input-critical");
             var submit_permission_critical = document.getElementById("submit-critical");
             var submit_permission_critical_text = document.getElementById("submit-critical-text");
@@ -195,13 +176,7 @@
                 }
             }
 
-            input_permission_parent.oninput = (data) => {
-                submit_permission_parent.disabled = (data.target.value == "" || data.target.value == original_permission_parent);
-                
-                if (!submit_permission_parent.disabled && data.target.value == " ") {
-                    data.target.value = original_permission_parent;
-                }
-            }
+
             
 
             input_permission_critical.onchange = (data) => {
@@ -235,23 +210,7 @@
                 );
             }
 
-            submit_permission_parent.onclick = async (data) => {
-                await advancedPost(
-                    "editparent/",
-                    {
-                        "Parent": input_permission_parent.value
-                    },
-                    {
-                        "onSuccess": async (data) => {
-                            original_permission_parent = input_permission_parent.value;
-                            input_permission_parent.value = "";
-                            input_permission_parent.placeholder = original_permission_parent;
-                            submit_permission_parent.disabled;
-                        }
-                    }
-                );
-            }
-
+            
             submit_permission_critical.onclick = async (data) => {
                 await advancedPost(
                     "togglecritical/",

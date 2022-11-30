@@ -12,8 +12,8 @@ namespace TheSKZWeb.Areas.Roles.Controllers
 {
     [Area("Roles")]
     [Permission(
-        ServicePermissions.Roles,
-        ServicePermissions.Roles_Administrator
+        PagePermissions.Roles,
+        PagePermissions.Roles_Administrator
     )]
     public class AdministratorController : NewController
     {
@@ -42,7 +42,6 @@ namespace TheSKZWeb.Areas.Roles.Controllers
                 select new _Role
                 {
                     RoleId = _rolesService.GetRoleHashId(role.Id),
-                    IsCritical = role.IsCritical,
                     IsDefault = role.IsDefault,
                     Name = role.Name,
                     Highlighted = role.Id == highlightedRole?.Id
@@ -55,7 +54,6 @@ namespace TheSKZWeb.Areas.Roles.Controllers
                 Highlighted = highlightedRole != null ? new _Role
                 {
                     RoleId = _rolesService.GetRoleHashId(highlightedRole.Id),
-                    IsCritical = highlightedRole.IsCritical,
                     IsDefault = highlightedRole.IsDefault,
                     Name = highlightedRole.Name,
                     Highlighted = true
@@ -65,7 +63,7 @@ namespace TheSKZWeb.Areas.Roles.Controllers
 
         [HttpGet("/administrator/roles/create")]
         [Permission(
-            ServicePermissions.Roles_Administrator_Create
+            PagePermissions.Roles_Administrator_Create
         )]
         public IActionResult ManageRolesCreate()
         {
@@ -74,13 +72,13 @@ namespace TheSKZWeb.Areas.Roles.Controllers
 
         [HttpPost("/administrator/roles/create")]
         [Permission(
-            ServicePermissions.Roles_Administrator_Create
+            PagePermissions.Roles_Administrator_Create
         )]
         public async Task<IActionResult> ManageRolesCreate(
             [FromBody] In_ManageRoleCreate request
         )
         {
-            if (request.Name == null || request.Critical == null || request.Default == null)
+            if (request.Name == null || request.Default == null)
             {
                 return Ok(
                     new
@@ -109,7 +107,7 @@ namespace TheSKZWeb.Areas.Roles.Controllers
             }
 
 
-            Role createdRole = await _rolesService.CreateRole(request.Name, request.Critical ?? false, request.Default ?? false);
+            Role createdRole = await _rolesService.CreateRole(request.Name, request.Default ?? false);
 
             User? identity = await GetIdentity();
             if (identity == null)
@@ -147,7 +145,7 @@ namespace TheSKZWeb.Areas.Roles.Controllers
 
         [HttpGet("/administrator/roles/{roleId}")]
         [Permission(
-            ServicePermissions.Roles_Administrator_Role
+            PagePermissions.Roles_Administrator_Role
         )]
         public async Task<IActionResult> ManageRole(
             [FromRoute] In_PartialRoleIdentifier roleIdentifier
@@ -173,7 +171,6 @@ namespace TheSKZWeb.Areas.Roles.Controllers
             return View(new Out_ManageRole
             {
                 RoleId = _rolesService.GetRoleHashId(role.Id),
-                IsCritical = role.IsCritical,
                 IsDefault = role.IsDefault,
                 Name = role.Name,
                 CreatedAt = role.CreatedAt,
@@ -186,8 +183,8 @@ namespace TheSKZWeb.Areas.Roles.Controllers
         // allways 2fa
         [HttpPost("/administrator/roles/{roleId}/delete")]
         [Permission(
-            ServicePermissions.Roles_Administrator_Role,
-            ServicePermissions.Roles_Administrator_Role_Delete
+            PagePermissions.Roles_Administrator_Role,
+            PagePermissions.Roles_Administrator_Role_Delete
         )]
         public async Task<IActionResult> ManageRoleDelete(
             [FromRoute] In_PartialRoleIdentifier roleIdentifier,
@@ -299,11 +296,10 @@ namespace TheSKZWeb.Areas.Roles.Controllers
             );
         }
 
-        // 2fa if critical
         [HttpPost("/administrator/roles/{roleId}/editname")]
         [Permission(
-            ServicePermissions.Roles_Administrator_Role,
-            ServicePermissions.Roles_Administrator_Role_Name
+            PagePermissions.Roles_Administrator_Role,
+            PagePermissions.Roles_Administrator_Role_Name
         )]
         public async Task<IActionResult> ManageRoleName(
             [FromRoute] In_PartialRoleIdentifier roleIdentifier,
@@ -345,45 +341,6 @@ namespace TheSKZWeb.Areas.Roles.Controllers
                 return BadRequest();
             }
 
-            if (role.IsCritical)
-            {
-                var identityHId = _userService.GetUserHashId(identity.Id);
-                if (request.mfaCode == null)
-                {
-                    return Ok(
-                        new
-                        {
-                            Message = "2FA Validation required",
-                            For = "Manage Role Name",
-                            Type = "Error",
-                            Data = new
-                            {
-                                UserIdentifier = identityHId
-                            },
-                            Tags = new string[]
-                            {
-                            ResponseTags.DO_MFA
-                            }
-                        }
-                    );
-                }
-
-                if (!_mfaService.ValidateMFARequest(identityHId, request.mfaCode))
-                {
-                    return Ok(
-                        new
-                        {
-                            Message = "2FA Validation failed",
-                            For = "Manage Role Name",
-                            Type = "Error",
-                            Data = new
-                            {
-                                UserIdentifier = identityHId
-                            }
-                        }
-                    );
-                }
-            }
 
             if (!await _userService.HasRole(
                 identity,
@@ -424,117 +381,12 @@ namespace TheSKZWeb.Areas.Roles.Controllers
             );
         }
 
-        // allways critical
-        [HttpPost("/administrator/roles/{roleId}/togglecritical")]
-        [Permission(
-            ServicePermissions.Roles_Administrator_Role,
-            ServicePermissions.Roles_Administrator_Role_Critical
-        )]
-        public async Task<IActionResult> ManageRoleCritical(
-            [FromRoute] In_PartialRoleIdentifier roleIdentifier,
-            [FromBody] In_ManageRoleCritical request
-        )
-        {
-            Role? role = await _rolesService.GetRoleFromPartial(roleIdentifier.roleId);
-            if (role == null)
-            {
-                return Ok(
-                    new
-                    {
-                        Message = "Role not found",
-                        For = "Manage Role Critical",
-                        Type = "Error"
-                    }
-                );
-            }
+        
 
-            User? identity = await GetIdentity();
-            if (identity == null)
-            {
-                return BadRequest();
-            }
-
-            var identityHId = _userService.GetUserHashId(identity.Id);
-            if (request.mfaCode == null)
-            {
-                return Ok(
-                    new
-                    {
-                        Message = "2FA Validation required",
-                        For = "Manage Role Critical",
-                        Type = "Error",
-                        Data = new
-                        {
-                            UserIdentifier = identityHId
-                        },
-                        Tags = new string[]
-                        {
-                        ResponseTags.DO_MFA
-                        }
-                    }
-                );
-            }
-
-            if (!_mfaService.ValidateMFARequest(identityHId, request.mfaCode))
-            {
-                return Ok(
-                    new
-                    {
-                        Message = "2FA Validation failed",
-                        For = "Manage Role Critical",
-                        Type = "Error",
-                        Data = new
-                        {
-                            UserIdentifier = identityHId
-                        }
-                    }
-                );
-            }
-
-            if (!await _userService.HasRole(
-                identity,
-                r => r,
-                role
-                )
-            )
-            {
-                return Ok(
-                    new
-                    {
-                        Message = "You can't manage this role because you don't have it.",
-                        For = "Manage Role Critical",
-                        Type = "Error",
-                        Data = new
-                        {
-                            RoleIdentifier = roleIdentifier.roleId
-                        }
-                    }
-                );
-            }
-
-            role.IsCritical = !role.IsCritical;
-
-            await _rolesService.UpdateRole(role);
-
-            return Ok(
-                new
-                {
-                    Message = "Role Critical Updated",
-                    For = "Manage Role Critical",
-                    Type = "Error",
-                    Data = new
-                    {
-                        RoleIdentifier = roleIdentifier.roleId
-                    }
-                }
-            );
-        }
-
-        // 2fa if critical
         [HttpPost("/administrator/roles/{roleId}/toggledefault")]
         [Permission(
-            ServicePermissions.Roles_Administrator_Role,
-            ServicePermissions.Roles_Administrator_Role_Default
+            PagePermissions.Roles_Administrator_Role,
+            PagePermissions.Roles_Administrator_Role_Default
         )]
         public async Task<IActionResult> ManageRoleDefault(
             [FromRoute] In_PartialRoleIdentifier roleIdentifier,
@@ -558,46 +410,6 @@ namespace TheSKZWeb.Areas.Roles.Controllers
             if (identity == null)
             {
                 return BadRequest();
-            }
-
-            if (role.IsCritical)
-            {
-                var identityHId = _userService.GetUserHashId(identity.Id);
-                if (request.mfaCode == null)
-                {
-                    return Ok(
-                        new
-                        {
-                            Message = "2FA Validation required",
-                            For = "Manage Role Default",
-                            Type = "Error",
-                            Data = new
-                            {
-                                UserIdentifier = identityHId
-                            },
-                            Tags = new string[]
-                            {
-                            ResponseTags.DO_MFA
-                            }
-                        }
-                    );
-                }
-
-                if (!_mfaService.ValidateMFARequest(identityHId, request.mfaCode))
-                {
-                    return Ok(
-                        new
-                        {
-                            Message = "2FA Validation failed",
-                            For = "Manage Role Default",
-                            Type = "Error",
-                            Data = new
-                            {
-                                UserIdentifier = identityHId
-                            }
-                        }
-                    );
-                }
             }
 
             if (!await _userService.HasRole(
@@ -642,8 +454,8 @@ namespace TheSKZWeb.Areas.Roles.Controllers
 
         [HttpGet("/administrator/roles/{roleId}/permissions")]
         [Permission(
-            ServicePermissions.Roles_Administrator_Role,
-            ServicePermissions.Roles_Administrator_Role_Permissions
+            PagePermissions.Roles_Administrator_Role,
+            PagePermissions.Roles_Administrator_Role_Permissions
         )]
         public async Task<IActionResult> ManageRolePermissions(
             [FromRoute] In_PartialRoleIdentifier roleIdentifier
@@ -681,12 +493,11 @@ namespace TheSKZWeb.Areas.Roles.Controllers
             );
         }
 
-        // 2fa if critical
         [HttpPost("/administrator/roles/{roleId}/permissions/grant")]
         [Permission(
-            ServicePermissions.Roles_Administrator_Role,
-            ServicePermissions.Roles_Administrator_Role_Permissions,
-            ServicePermissions.Roles_Administrator_Role_Permissions_Grant
+            PagePermissions.Roles_Administrator_Role,
+            PagePermissions.Roles_Administrator_Role_Permissions,
+            PagePermissions.Roles_Administrator_Role_Permissions_Grant
         )]
         public async Task<IActionResult> ManageRolePermissionsGrant(
             [FromRoute] In_PartialRoleIdentifier roleIdentifier,
@@ -734,46 +545,6 @@ namespace TheSKZWeb.Areas.Roles.Controllers
                 return BadRequest();
             }
 
-            if (role.IsCritical || permission.IsCritical)
-            {
-                var identityHId = _userService.GetUserHashId(identity.Id);
-                if (request.mfaCode == null)
-                {
-                    return Ok(
-                        new
-                        {
-                            Message = "2FA Validation required",
-                            For = "Manage Role Permissions Grant",
-                            Type = "Error",
-                            Data = new
-                            {
-                                UserIdentifier = identityHId
-                            },
-                            Tags = new string[]
-                            {
-                            ResponseTags.DO_MFA
-                            }
-                        }
-                    );
-                }
-
-                if (!_mfaService.ValidateMFARequest(identityHId, request.mfaCode))
-                {
-                    return Ok(
-                        new
-                        {
-                            Message = "2FA Validation failed",
-                            For = "Manage Role Permissions Grant",
-                            Type = "Error",
-                            Data = new
-                            {
-                                UserIdentifier = identityHId
-                            }
-                        }
-                    );
-                }
-            }
-
             
             if (!await _userService.HasRole(
                 identity,
@@ -796,28 +567,27 @@ namespace TheSKZWeb.Areas.Roles.Controllers
                 );
             }
 
-            // skz!
-            //if (!await _userService.HasPermission(
-            //    identity,
-            //    r => r,
-            //    permission
-            //    )
-            //)
-            //{
-            //    return Ok(
-            //        new
-            //        {
-            //            Message = "You can't give the role this permission because you don't have it",
-            //            For = "Manage Role Permissions Grant",
-            //            Type = "Error",
-            //            Data = new
-            //            {
-            //                RoleIdentifier = roleIdentifier.roleId,
-            //                PermissionIdentifier = "@" + request.PermissionName
-            //            }
-            //        }
-            //    );
-            //}
+            if (!await _userService.HasPermission(
+                identity,
+                r => r,
+                permission
+                )
+            )
+            {
+                return Ok(
+                    new
+                    {
+                        Message = "You can't give the role this permission because you don't have it",
+                        For = "Manage Role Permissions Grant",
+                        Type = "Error",
+                        Data = new
+                        {
+                            RoleIdentifier = roleIdentifier.roleId,
+                            PermissionIdentifier = "@" + request.PermissionName
+                        }
+                    }
+                );
+            }
 
             await _rolesService.GrantPermission(role, permission);
 
@@ -836,12 +606,11 @@ namespace TheSKZWeb.Areas.Roles.Controllers
             );
         }
 
-        // 2fa if critical
         [HttpPost("/administrator/roles/{roleId}/permissions/revoke")]
         [Permission(
-            ServicePermissions.Roles_Administrator_Role,
-            ServicePermissions.Roles_Administrator_Role_Permissions,
-            ServicePermissions.Roles_Administrator_Role_Permissions_Revoke
+            PagePermissions.Roles_Administrator_Role,
+            PagePermissions.Roles_Administrator_Role_Permissions,
+            PagePermissions.Roles_Administrator_Role_Permissions_Revoke
         )]
         public async Task<IActionResult> ManageRolePermissionsRevoke(
             [FromRoute] In_PartialRoleIdentifier roleIdentifier,
@@ -892,46 +661,6 @@ namespace TheSKZWeb.Areas.Roles.Controllers
                 return BadRequest();
             }
 
-            if (role.IsCritical || permission.IsCritical)
-            {
-                var identityHId = _userService.GetUserHashId(identity.Id);
-                if (request.mfaCode == null)
-                {
-                    return Ok(
-                        new
-                        {
-                            Message = "2FA Validation required",
-                            For = "Manage Role Permissions Revoke",
-                            Type = "Error",
-                            Data = new
-                            {
-                                UserIdentifier = identityHId
-                            },
-                            Tags = new string[]
-                            {
-                            ResponseTags.DO_MFA
-                            }
-                        }
-                    );
-                }
-
-                if (!_mfaService.ValidateMFARequest(identityHId, request.mfaCode))
-                {
-                    return Ok(
-                        new
-                        {
-                            Message = "2FA Validation failed",
-                            For = "Manage Role Permissions Revoke",
-                            Type = "Error",
-                            Data = new
-                            {
-                                UserIdentifier = identityHId
-                            }
-                        }
-                    );
-                }
-            }
-
             if (!await _userService.HasRole(
                 identity,
                 r => r,
@@ -953,31 +682,30 @@ namespace TheSKZWeb.Areas.Roles.Controllers
                     }
                 );
             }
-            
-            // skz!
-            //if (!await _userService.HasPermission(
-            //    identity,
-            //    r => r,
-            //    permission
-            //    )
-            //)
-            //{
-            //    return Ok(
-            //        new
-            //        {
-            //            Message = "You can't revoke this permission from the role because you don't have it",
-            //            For = "Manage Role Permissions Revoke",
-            //            Type = "Error",
-            //            Data = new
-            //            {
-            //                RoleIdentifier = roleIdentifier.roleId,
-            //                PermissionIdentifier = request.PermissionId
-            //            }
-            //        }
-            //    );
-            //}
 
-            //await _rolesService.RevokePermission(role, permission);
+            if (!await _userService.HasPermission(
+                identity,
+                r => r,
+                permission
+                )
+            )
+            {
+                return Ok(
+                    new
+                    {
+                        Message = "You can't revoke this permission from the role because you don't have it",
+                        For = "Manage Role Permissions Revoke",
+                        Type = "Error",
+                        Data = new
+                        {
+                            RoleIdentifier = roleIdentifier.roleId,
+                            PermissionIdentifier = request.PermissionId
+                        }
+                    }
+                );
+            }
+
+            await _rolesService.RevokePermission(role, permission);
 
             return
             Ok(

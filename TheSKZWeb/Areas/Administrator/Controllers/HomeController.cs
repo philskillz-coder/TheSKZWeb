@@ -7,8 +7,8 @@ namespace TheSKZWeb.Areas.Administrator.Controllers;
 
 [Area("Administrator")]
 [Permission(
-    ServicePermissions.Administrator,
-    ServicePermissions.Administrator_Administrator
+    PagePermissions.Administrator,
+    PagePermissions.Administrator_Administrator
 )]
 public class HomeController : NewController
 {

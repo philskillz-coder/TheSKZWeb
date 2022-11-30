@@ -47,7 +47,7 @@
                 <div style="width: 20%; float: left;">
                     <div class="ms-0 me-1">
                         <div class="checkbox">
-                            <input id="input-critical" type="checkbox" data-toggle="toggle" @(Model.IsCritical?"checked":"")>
+                            <input id="input-critical" type="checkbox" data-toggle="toggle">
                         </div>
                     </div>
                 </div>
@@ -155,11 +155,6 @@
             var submit_role_name = document.getElementById("submit-name");
             var submit_role_name_text = document.getElementById("submit-name-text");
 
-            var original_role_critical = @(Model.IsCritical?"true":"false");
-            var input_role_critical = document.getElementById("input-critical");
-            var submit_role_critical = document.getElementById("submit-critical");
-            var submit_role_critical_text = document.getElementById("submit-critical-text");
-
             var original_role_default = @(Model.IsDefault?"true":"false");
             var input_role_default = document.getElementById("input-default");
             var submit_role_default = document.getElementById("submit-default");
@@ -173,10 +168,6 @@
                 if (!submit_role_name.disabled && data.target.value == " ") {
                     data.target.value = original_role_name;
                 }
-            }
-
-            input_role_critical.onchange = (data) => {
-                submit_role_critical.disabled = (data.target.checked == original_role_critical);    
             }
 
             input_role_default.onchange = (data) => {
@@ -199,22 +190,6 @@
                             submit_role_name.disabled = true;
                         }
                     }
-                );
-            }
-
-
-            submit_role_critical.onclick = async (data) => { 
-                await advancedPost(
-                    "togglecritical/",
-                    {},
-                    {
-                        "mfa": true,
-                        "onSuccess": async (data) => {
-                            original_role_critical = !original_role_critical;
-                            submit_role_critical.disabled = true;
-                        }
-                    }
-                    true
                 );
             }
 

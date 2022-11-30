@@ -4,8 +4,8 @@
     {
         public string UserId { get; set; }
         public string Username { get; set; }
-        public bool CriticalPerms { get; set; }
         public bool Highlighted { get; set; }
+        public bool MFAEnabled { get; set; }
     }
 
     public class Out_ManageUsers

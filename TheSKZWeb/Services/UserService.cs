@@ -49,7 +49,6 @@ namespace TheSKZWeb.Services
         Task RevokePermission(User user, Permission permission);
 
         Task<bool> HasPermission<T>(User? user, Func<Permission, T> selector, params T[] permissions);
-        Task<bool> HasCriticalPermission(User? user);
         
 
         IQueryable<Role> GetUserRoles(int user);
@@ -57,7 +56,6 @@ namespace TheSKZWeb.Services
         Task RevokeRole(User user, Role role);
 
         Task<bool> HasRole<T>(User? user, Func<Role, T> selector, params T[] roles);
-        Task<bool> HasCriticalRole(User? user);
 
 
         ClaimsPrincipal CreateLoginPrincipal(User user);
@@ -338,17 +336,6 @@ namespace TheSKZWeb.Services
 
 
 
-        public async Task<bool> HasCriticalPermission(User? user)
-        {
-            if (user == null)
-            {
-                return true;
-            }
-            return await GetAllUserPermissions(user.Id).AnyAsync(p => p.IsCritical);
-        }
-
-
-
         public IQueryable<Role> GetUserRoles(int user)
         {
             return _db.UserRoles.Where(r => r.User.Id == user).Include(r => r.Role).Select(r => r.Role);
@@ -402,15 +389,7 @@ namespace TheSKZWeb.Services
         }
 
         
-        public async Task<bool> HasCriticalRole(User? user)
-        {
-            if (user == null)
-            {
-                return true;
-            }
-            return await GetUserRoles(user.Id).AnyAsync(r => r.IsCritical);
-        }
-
+        
 
         public ClaimsPrincipal CreateLoginPrincipal(User user)
         {

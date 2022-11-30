@@ -16,7 +16,7 @@ namespace TheSKZWeb.Services
         IQueryable<Permission> GetPermissionsByName(string[] names);
 
         IQueryable<Permission> GetDefaultPermissions();
-        Task<Permission> CreatePermission(string name, bool isCritical, bool isDefault);
+        Task<Permission> CreatePermission(string name, bool isDefault);
         Task<bool> PermissionNameExists(string name);
 
         //bool IncludesPermissions(IEnumerable<object> presentPermissions, IEnumerable<object> requiredPermissions);
@@ -64,12 +64,11 @@ namespace TheSKZWeb.Services
             return _db.Permissions;
         }
 
-        public async Task<Permission> CreatePermission(string name, bool isCritical, bool isDefault)
+        public async Task<Permission> CreatePermission(string name, bool isDefault)
         {
             Permission createdPermission = new Permission
             {
                 Name = name,
-                IsCritical = isCritical,
                 IsDefault = isDefault,
                 CreatedAt = DateTime.UtcNow
             };

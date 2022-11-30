@@ -52,7 +52,7 @@
                 Username
             </th>
             <th>
-                Critical
+                MFA
             </th>
             <th>
                 Action
@@ -69,13 +69,12 @@
                 <td width="55%">
                     <span class="copyText" data-name="Username" data-copydata="@Model.Highlighted.Username" data-doalert="true" data-generate="true"></span>
                 </td>
-                <td class="@(Model.Highlighted.CriticalPerms?"table-danger":"") td_center" width="10%">
+                <td class="@(Model.Highlighted.MFAEnabled? "table-success" : "table-warning") td_center" width="10%">
                     @{
-                        if (Model.Highlighted.CriticalPerms) {
-                                <i class="bi bi-check" title="Critical Permissions"></i>
-                        } else
-                        {
-                                <i class="bi bi-x" title="Non-Critical Permissions"></i>
+                        if (Model.Highlighted.MFAEnabled) {
+                            <i class="bi bi-check-lg" title="Enabled">Enabled</i>
+                        } else {
+                            <i class="bi bi-x" title="Disabled">Disabled</i>
                         }
                     }
                 </td>
@@ -100,13 +99,15 @@
                 <td width="55%">
                     <span class="copyText" data-name="Username" data-copydata="@user.Username" data-doalert="true" data-generate="true"></span>
                 </td>
-                <td class="@(user.CriticalPerms?"table-danger":"") td_center" width="10%">
+                <td class="@(user.MFAEnabled? "table-success" : "table-warning") td_center" width="10%">
                     @{
-                        if (user.CriticalPerms) {
-                                <i class="bi bi-check" title="Critical Permissions"></i>
-                        } else
+                        if (user.MFAEnabled)
                         {
-                                <i class="bi bi-x" title="Non-Critical Permissions"></i>
+                            <i class="bi bi-check-lg" title="Enabled">Enabled</i>
+                        }
+                        else
+                        {
+                            <i class="bi bi-x" title="Disabled">Disabled</i>
                         }
                     }
                 </td>

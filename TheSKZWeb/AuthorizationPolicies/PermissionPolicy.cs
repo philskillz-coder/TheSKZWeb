@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace TheSKZWeb.AuthorizationPolicies
 {
-    public class ServicePermissions
+    public class PagePermissions
     {
         // Area Administrator
         public const string Administrator = "DRAMyArQ";
@@ -26,11 +26,9 @@ namespace TheSKZWeb.AuthorizationPolicies
         public const string Permissions_Administrator = "3pAonlnm";
         public const string Permissions_Administrator_Create = "eQlegWmk";
         public const string Permissions_Administrator_Permission = "NpzG2WP6";
-        public const string Permissions_Administrator_Permission_Critical = "2Gzb8A6q";
         public const string Permissions_Administrator_Permission_Default = "GKz54Weo";
         public const string Permissions_Administrator_Permission_Delete = "69ldBWed";
         public const string Permissions_Administrator_Permission_Name = "beWaxA2k";
-        public const string Permissions_Administrator_Permission_Parent = "";
 
 
 
@@ -41,7 +39,6 @@ namespace TheSKZWeb.AuthorizationPolicies
         public const string Roles_Administrator = "o8l25z9v";
         public const string Roles_Administrator_Create = "vrAZ9lo9";
         public const string Roles_Administrator_Role = "b3z60Ap0";
-        public const string Roles_Administrator_Role_Critical = "4qzE5zVJ";
         public const string Roles_Administrator_Role_Default = "o8lJ00Wk";
         public const string Roles_Administrator_Role_Delete = "8GA1NWXv";
         public const string Roles_Administrator_Role_Name = "x9WP0WB4";
@@ -118,8 +115,6 @@ namespace TheSKZWeb.AuthorizationPolicies
 
         async Task IAsyncAuthorizationFilter.OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            // skz!
-            return;
             Claim? claim = (context.HttpContext.User.Identity as ClaimsIdentity)?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
             if (claim == null)
             {
