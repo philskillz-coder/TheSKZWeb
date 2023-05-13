@@ -36,23 +36,22 @@ tttttt:::::::tttttt     h:::::::hhh::::::h e::::::e     e:::::es::::::ssss:::::s
     @{
         var baseuri = Url.Action();
         if (baseuri != null && baseuri != "/") {
-                                                                                                                                                                                                <base href="@baseuri/" target="_self"/>
-                                                                                                                                                                                                <!-- base uri not null: @Url.Action() -->
+            <base href="@baseuri/" target="_self"/>
+            <!-- base uri not null: @Url.Action() -->
         } else
         {
-                                                                                                                                                                                        <environment exclude="Development">
-                                                                                                                                                                                            <base href="https://theskz.dev/"/>
-                                                                                                                                                                                        </environment>
-                                                                                                                                                                                        <environment include="Development">
-                                                                                                                                                                                            <base href="https://localhost:44336/"/>
-                                                                                                                                                                                        </environment>
-            
+            <environment exclude="Development">
+                <base href="https://theskz.dev/"/>
+            </environment>
+            <environment include="Development">
+                <base href="https://localhost:44336/"/>
+            </environment>
         }
     }
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3 bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TheSkz</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -62,16 +61,16 @@ tttttt:::::::tttttt     h:::::::hhh::::::h e::::::e     e:::::es::::::ssss:::::s
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Home" asp-controller="Home" asp-action="Index">Home</a>
+                        <a class="nav-link text-light" asp-area="Home" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Home" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <a class="nav-link text-light" asp-area="Home" asp-controller="Home" asp-action="Privacy">Privacy</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Home" asp-controller="Home" asp-action="About">About</a>
+                        <a class="nav-link text-light" asp-area="Home" asp-controller="Home" asp-action="About">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Socials" asp-controller="Home" asp-action="Index">Socials</a>
+                        <a class="nav-link text-light" asp-area="Socials" asp-controller="Home" asp-action="Index">Socials</a>
                     </li>
                     @* <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="ShortLinks" asp-controller="Home" asp-action="Index">ShortLinks</a>
@@ -88,38 +87,38 @@ tttttt:::::::tttttt     h:::::::hhh::::::h e::::::e     e:::::es::::::ssss:::::s
                 </style>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown">
-		               <a class="nav-link  dropdown-toggle" href="#" data-bs-toggle="dropdown">Features</a>
-		                <ul class="dropdown-menu">
-			              <li><a class="dropdown-item text-dark" asp-area="ShortLinks" asp-controller="Home" asp-action="Index">ShortLinks</a></li>
+		               <a class="nav-link  dropdown-toggle bg-dark text-light" href="#" data-bs-toggle="dropdown">Features</a>
+		                <ul class="dropdown-menu dropdown-menu-dark bg-dark">
+			              <li><a class="dropdown-item text-light" asp-area="ShortLinks" asp-controller="Home" asp-action="Index">ShortLinks</a></li>
 		                </ul>
 		            </li>
                     @{
                         string? username = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
 
                         if (username == null)
-{
-                                                                                                <li class="nav-item">
-                                                                                                    <a class="nav-link" asp-area="Users" asp-controller="Home" asp-action="Login">Login</a>
-                                                                                                </li>
-                                                                                                <li class="nav-item">
-                                                                                                    <a class="nav-link" asp-area="Users" asp-controller="Home" asp-action="Register">Register</a>
-                                                                                                    </li>
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="Users" asp-controller="Home" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="Users" asp-controller="Home" asp-action="Register">Register</a>
+                            </li>
                         } else 
                         {
                             LayoutModel? layoutModel = (LayoutModel)ViewBag.LayoutModel;
                             if (layoutModel != null && layoutModel.IsAdministrator)
                             {
-                                                                                                    <li class="nav-item">
-                                                                                                        <a class="nav-link" asp-area="Administrator" asp-controller="Home" asp-action="Index">Administrator</a>
-                                                                                                    </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="Administrator" asp-controller="Home" asp-action="Index">Administrator</a>
+                                </li>
                             }
 
-                                                                                                <li class="nav-item">
-                                                                                                    <a class="nav-link" asp-area="Users" asp-controller="Home" asp-action="Me">@username</a>
-                                                                                                </li>
-                                                                                                <li class="nav-item">
-                                                                                                    <a id="btn-logout" style="cursor: pointer" class="nav-link">Logout</a>
-                                                                                                </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="Users" asp-controller="Home" asp-action="Me">My account</a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="btn-logout text-light" style="cursor: pointer" class="nav-link">Logout</a>
+                            </li>
                         }
                     }
                 </ul>

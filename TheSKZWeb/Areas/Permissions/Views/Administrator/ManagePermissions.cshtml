@@ -20,7 +20,7 @@
         </div>
         <div class="col-6 text-end">
             <div class="w-100 btn-group" role="group">
-                <a asp-area="Administrator" asp-controller="Home" asp-action="Index" class="btn btn-primary rounded ms-0 me-1">
+                <a asp-area="Administrator" asp-controller="Home" asp-action="Index" class="btn btn-secondary rounded ms-0 me-1">
                     <i class="bi bi-caret-left"></i> &nbsp; Back to overview
                 </a>
                 <a asp-area="Permissions" asp-controller="Administrator" asp-action="ManagePermissionsCreate" class="btn btn-primary rounded ms-1 me-0" style="display: inline-block">
@@ -45,19 +45,19 @@
 @{
     // searchable sortable 
 }
-<table class="table table-bordered table-striped table-hover " style="width: 100%">
+<table class="table table-bordered table-striped table-hover" style="width: 100%">
     <thead>
         <tr>
-            <th>
+            <th class="text-light">
                 ID
             </th>
-            <th>
+            <th class="text-light">
                 Default
             </th>
-            <th>
+            <th class="text-light">
                 Name
             </th>
-            <th>
+            <th class="text-light">
                 Action
             </th>
         </tr>
@@ -67,7 +67,7 @@
         {
             <tr id="Highlighted-Top" class="table-success">
                 <td class="td_center" width="10%">
-                    <span class="copyText" style="color: #DE3394" data-name="Permission Id" data-copydata="@Model.Highlighted.PermissionId" data-doalert="true" data-generate="true"></span>
+                    <span class="copyText" style="color: var(--text-accent)" data-name="Permission Id" data-copydata="@Model.Highlighted.PermissionId" data-doalert="true" data-generate="true"></span>
                 </td>
                 <td class="td_center" width="10%">
                     <i class="bi bi-x" title="Non-Critical Permission"></i>
@@ -75,10 +75,10 @@
                 <td class="@(Model.Highlighted.IsDefault?"table-warning":"") td_center" width="10%">
                     @{
                         if (Model.Highlighted.IsDefault) {
-                                <i class="bi bi-check" title="Default Permission"></i>
+                            <i class="bi bi-check text-light" title="Default Permission"></i>
                         } else
                         {
-                                <i class="bi bi-x" title="Non-Default Permission"></i>
+                            <i class="bi bi-x text-light" title="Non-Default Permission"></i>
                         }
                     }
                 </td>
@@ -109,14 +109,14 @@
                 <td class="@(permission.IsDefault?"table-warning":"") td_center" width="10%">
                     @{
                         if (permission.IsDefault) {
-                                <i class="bi bi-check" title="Default Permission"></i>
+                            <i class="bi bi-check" title="Default Permission"></i>
                         } else
                         {
-                                <i class="bi bi-x" title="Non-Default Permission"></i>
+                            <i class="bi bi-x" title="Non-Default Permission"></i>
                         }
                     }
                 </td>
-                <td width="45%">
+                <td width="45%" class="text-light">
                     <span class="copyText" data-name="Permission Name" data-copydata="@permission.Name" data-doalert="true" data-generate="true"></span>
                 </td>
 

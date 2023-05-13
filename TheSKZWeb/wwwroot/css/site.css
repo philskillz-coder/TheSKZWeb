@@ -2,19 +2,33 @@ html {
   font-size: 14px;
 }
 
+:root {
+    --primary-color: #3E50B4;
+    --accent-color: #FF3F80;
+    --background: #212121;
+
+    --primary-text: #FFFFFFFF;
+    --secondary-text: #B3FFFFFF;
+    --hint: #80FFFFFF;
+    --dividers: #1FFFFFFF;
+}
+
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+        background: var(--background);
+    }
 }
 
 html {
+  background: var(--background);
   position: relative;
   min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background: var(--background);
 }
 
 span.copyText {

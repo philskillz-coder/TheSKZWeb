@@ -38,7 +38,7 @@ namespace TheSKZWeb.Services
         {
             _db = db;
             _permissionHashids = new Hashids(
-                "xi4WXVlJfS5sqpUc5hI2cnJRWrkg17ks",
+                "{F8C0E954-7FA4-46D2-83A1-398C93F3F3B6}",
                 8
             );
 
