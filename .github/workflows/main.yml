@@ -39,4 +39,5 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          screen -dm -S aspsite-${{ github.sha }} bash -c "cd ~/web/out && dotnet TheSKZWeb.dll; exec sh"
+          screen -XS aspsite quit
+          screen -dm -S aspsite-${{ github.run_id }} bash -c "cd ~/web/out && dotnet TheSKZWeb.dll; exec sh"
