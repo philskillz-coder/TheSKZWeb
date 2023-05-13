@@ -29,4 +29,4 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SERVER_KEY }}
         source: ./out/
-        target: /path/to/deploy
+        target: ~/web
