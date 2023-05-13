@@ -42,102 +42,50 @@
     </div>
 }
 
-@{
-    // searchable sortable 
-}
-<table class="table table-bordered table-striped table-hover" style="width: 100%">
+<table 
+    id="table"
+    class="table table-bordered table-striped table-hover table-responsive table-dark w-100"
+>
     <thead>
         <tr>
-            <th class="text-light">
-                ID
-            </th>
-            <th class="text-light">
-                Default
-            </th>
-            <th class="text-light">
-                Name
-            </th>
-            <th class="text-light">
-                Action
-            </th>
+            <th>ID</th>
+            <th>Default</th>
+            <th>Name</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
-        @if (Model.Highlighted != null)
-        {
-            <tr id="Highlighted-Top" class="table-success">
-                <td class="td_center" width="10%">
-                    <span class="copyText" style="color: var(--text-accent)" data-name="Permission Id" data-copydata="@Model.Highlighted.PermissionId" data-doalert="true" data-generate="true"></span>
-                </td>
-                <td class="td_center" width="10%">
-                    <i class="bi bi-x" title="Non-Critical Permission"></i>
-                </td>
-                <td class="@(Model.Highlighted.IsDefault?"table-warning":"") td_center" width="10%">
-                    @{
-                        if (Model.Highlighted.IsDefault) {
-                            <i class="bi bi-check text-light" title="Default Permission"></i>
-                        } else
-                        {
-                            <i class="bi bi-x text-light" title="Non-Default Permission"></i>
-                        }
-                    }
-                </td>
-                <td width="45%">
-                    <span class="copyText" data-name="Permission Name" data-copydata="@Model.Highlighted.Name" data-doalert="true" data-generate="true"></span>
-                </td>
-                <td> 
-                    <div class="w-100 btn-group" role="group">
-                        <a class="btn btn-primary rounded ms-0 me-1" asp-area="Permissions" asp-controller="Administrator" asp-action="ManagePermission" asp-route-permissionId="@Model.Highlighted.PermissionId">
-                            <i class="bi bi-gear"></i> &nbsp; Manage
-                        </a>
-                        <a class="btn btn-danger rounded ms-1 me-0" asp-area="Permissions" asp-controller="Administrator" asp-action="ManagePermissions">
-                            <i class="bi bi-pin-angle"></i>
-                        </a>
-                    </div>
-                </td>
-            </tr>
-        }
         @foreach (_Permission permission in Model.Permissions)
         {
             <tr id="@(permission.Highlighted ? "Highlighted" : "")">
-                <td class="@(permission.Highlighted? "table-success" : "") td_center" width="10%">
-                    <span class="copyText" style="color: #DE3394" data-name="Permission Id" data-copydata="@permission.PermissionId" data-doalert="true" data-generate="true"></span>
+                <td class="td_center" width="10%" style="color: var(--accent-color)">
+                    @permission.PermissionId
                 </td>
                 <td class="td_center" width="10%">
-                    <i class="bi bi-x" title="Non-Critical Permission"></i>
-                </td>
-                <td class="@(permission.IsDefault?"table-warning":"") td_center" width="10%">
-                    @{
-                        if (permission.IsDefault) {
-                            <i class="bi bi-check" title="Default Permission"></i>
-                        } else
-                        {
-                            <i class="bi bi-x" title="Non-Default Permission"></i>
-                        }
+                    @if (permission.IsDefault) {
+                        @("YES")
+                    } else {
+                        @("NO")
                     }
                 </td>
-                <td width="45%" class="text-light">
-                    <span class="copyText" data-name="Permission Name" data-copydata="@permission.Name" data-doalert="true" data-generate="true"></span>
+                <td class="text-light">
+                    @permission.Name
                 </td>
-
-                <td> 
-                    @*<div class="btn-group">
-                      <a href="#" class="btn btn-primary active" aria-current="page">Active link</a>
-                      <a href="#" class="btn btn-primary">Link</a>
-                      <a href="#" class="btn btn-primary">Link</a>
-                    </div>*@
-                    <div class="w-100 btn-group" role="group">
-                        <a class="btn btn-primary rounded ms-0 me-1" asp-area="Permissions" asp-controller="Administrator" asp-action="ManagePermission" asp-route-permissionId="@permission.PermissionId">
-                            <i class="bi bi-gear"></i> &nbsp; Manage
+                <td width="20%">
+                    <div class="w-100 btn-group ms-1 me-0">
+                        <a class="btn btn-primary rounded-left text-center" asp-area="Permissions" asp-controller="Administrator" asp-action="ManagePermission" asp-route-permissionId="@permission.PermissionId">
+                            <i class="bi bi-gear text-light"></i> &nbsp; Manage
                         </a>
-                        @if (!permission.Highlighted) {
-                            <a class="btn btn-success rounded ms-1 me-0" asp-area="Permissions" asp-controller="Administrator" asp-action="ManagePermissions" asp-route-Highlighted="@permission.PermissionId">
-                                <i class="bi bi-pin-angle"></i>
-                            </a>
-                        } else
+                        @if (!permission.Highlighted)
                         {
-                            <a class="btn btn-danger rounded ms-1 me-0" asp-area="Permissions" asp-controller="Administrator" asp-action="ManagePermissions">
-                                <i class="bi bi-pin-angle"></i>
+                            <a class="w-fit btn btn-secondary rounded-right text-center" asp-area="Permissions" asp-controller="Administrator" asp-action="ManagePermissions" asp-route-Highlighted="@permission.PermissionId">
+                                <i class="bi bi-pin-angle text-light"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="w-fit btn btn-success rounded-right text-center" asp-area="Permissions" asp-controller="Administrator" asp-action="ManagePermissions">
+                                <i class="bi bi-pin-angle text-light"></i>
                             </a>
                         }
                     </div>
@@ -148,9 +96,4 @@
 </table>
 
 @section Scripts {
-    <script>
-        $(document).ready(function(){
-
-        });
-    </script>
 }
